@@ -1,7 +1,7 @@
 import folium
 
 def buildmap_start(lat, lon):
-    m = folium.Map(location=(lat, lon), zoom_start=14)
+    m = folium.Map(location=(lat, lon), zoom_start=17)
     folium.Marker(
         [lat, lon], 
         icon=folium.Icon(color='red', icon='home', prefix='fa'),
