@@ -19,5 +19,9 @@ def mapgen_view(request):
         print((target_time,lat,lon))
 
         map_html = buildmap_start(lat, lon)
+        return render(request, "mapgen.html", {'target_time':target_time, 'lat':lat, 'lon':lon, 'folium_map':map_html})
+    
+    if request.method=='GET':
+        # Change this to URL routing: If user submits GET request manually at URL `/mapgen/` redirect to URL `/`.
+        return render(request,"home.html")
 
-    return render(request, "mapgen.html", {'target_time':target_time, 'lat':lat, 'lon':lon, 'folium_map':map_html})
