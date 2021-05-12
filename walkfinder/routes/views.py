@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 import folium
+from .buildmap import buildmap_start
 
 # Create your views here.
 def home_view(request):
@@ -16,4 +17,7 @@ def mapgen_view(request):
         lat = request.POST.get('lat')
         lon = request.POST.get('lon')
         print((target_time,lat,lon))
-    return render(request, "mapgen.html", {'target_time':target_time, 'lat':lat, 'lon':lon, 'folium_map':f})
+
+        map_html = buildmap_start(lat, lon)
+
+    return render(request, "mapgen.html", {'target_time':target_time, 'lat':lat, 'lon':lon, 'folium_map':map_html})
