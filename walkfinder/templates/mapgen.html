@@ -1,0 +1,10 @@
+{% extends "home.html" %}
+
+{% block map %}
+    <div>{{ folium_map }}</div>
+    <p> The previous input had a target time of {{target_time}} minutes, 
+        a latitude of {{lat}}°, 
+        and a longitude of  {{lon}}°.
+
+    </p>
+{% endblock %}

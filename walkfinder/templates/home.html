@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+
+    <h2>Controls</h2>
+    <form action="/mapgen/" method="POST"> {% csrf_token %}
+        <label for="target_time">Target Time (mins):</label>
+        <input type="number" id="target_time" name="target_time" min="-120" max="120">
+        <br>
+        <label for="lat">Latitude:</label>
+        <input type="number" id="lat" name="lat" step=".00001" min="-90" max="90" required>
+        <br>
+        <label for="lon">Longitutde:</label>
+        <input type="number" id="lon" name="lon" step=".00001" min="-180" max="180" required>
+        <br>
+        <button type="submit">Generate Route</button>
+    </form>
+
+    <script>
+        if (document.getElementById('target_time').value < 0) {
+            document.getElementById('target_time').setCustomValidity('Sorry, time travel is currently in Beta testing. Please adhere to entropic time for now.');
+        }
+        else {
+            document.getElementById('target_time').setCustomValidity('');
+        }
+    </script>
+
+    {% block map %}{% endblock %}
+    
+</body>
+</html>
