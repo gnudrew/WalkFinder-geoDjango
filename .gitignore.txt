@@ -1,0 +1,2 @@
+walkfinder/routes/__pycache__
+walkfinder/walkfinder/__pycache__
