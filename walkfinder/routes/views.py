@@ -8,6 +8,8 @@ def home_view(request):
     # return HttpResponse("<h1>Hello World!</h1>")
     # print(request)
     # print(render(request, "home.html"))
+    request.session['fav_color']='red'
+    print('Home_View session: fav_color is:', request.session['fav_color'])
     return render(request, "home.html", {})
 
 def mapgen_view(request):
@@ -18,6 +20,18 @@ def mapgen_view(request):
         print((lat,lon))
 
         m = buildmap_start(lat, lon)
+
+        print('~~~ BEGIN SESSION TEST ~~~')
+        fav_color = request.session['fav_color']
+        print('fav_color is:',fav_color)
+        print('Setting fav_color to blue...')
+        request.session['fav_color'] = 'blue'
+        if request.session['fav_color'] == 'blue':
+            print('SUCCESS: new fav_color is blue')
+        else:
+            print('FAILURE: new fav_color not blue')
+        print('~~~ END OF SESSION TEST ~~~')
+
         return render(request, "mapgen.html", {'lat':lat, 'lon':lon, 'folium_map':m._repr_html_()})
     
     if request.method=='GET':
