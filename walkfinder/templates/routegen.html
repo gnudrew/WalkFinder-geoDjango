@@ -1,7 +1,7 @@
 {% extends "home.html" %}
 
 {% block input %}
-<p>Nice location!<br><br> Enter your walk's target time and let's get generating...
+<p>Nice location!<br><br> Now enter the target time for you walk and let's get generating...
 </p>
 <h2>Controls</h2>
 <form action="/routegen/" method="POST"> {% csrf_token %}
@@ -16,9 +16,9 @@
         value="10"
         required>
     <br>
-    <button type="submit">Generate Route</button>
+    <button type="submit">Generate New Route</button>
 </form>
-<a href="/walk">Start Walk</a>
+<a href="/walk">Next: Start Walk</a>
 {% endblock %}
 
 {% block map %}
