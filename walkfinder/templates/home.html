@@ -8,21 +8,12 @@
 </head>
 <body>
     <h1>Walking Route Generator</h1>
-    <p>Looking for some novelty in your daily walk? Aiming for a longer wander? <br><br>Either way, we've got you covered! <br><br>Enter your start position let's get generating...
+
+    {% block input %}
+    <p>Looking for some novelty in your daily walk? Aiming for a longer wander? <br><br>Either way, we've got you covered! <br><br>Enter your start position and let's get generating...
     </p>
     <h2>Controls</h2>
     <form action="/mapgen/" method="POST"> {% csrf_token %}
-        <label for="target_time">Target Time (mins):</label>
-        <input 
-            type="number" 
-            id="target_time" 
-            name="target_time" 
-            min="-120" 
-            max="120" 
-            step="1" 
-            value=""
-            required>
-        <br>
         <label for="lat">Latitude:</label>
         <input 
             type="number" 
@@ -46,8 +37,11 @@
             value="-93.143651"
             required>
         <br>
-        <button type="submit">Generate Route</button>
+        <button type="submit">Generate Map</button>
     </form>
+    <a href="/routegen">Next Step</a>
+
+    {% endblock %}
 
     <script>
         if (document.getElementById('target_time').value < 0) {

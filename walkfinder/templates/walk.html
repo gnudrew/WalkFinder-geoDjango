@@ -1,2 +1,14 @@
 {% extends "home.html" %}
 
+{% block input %}
+<p>
+    That's a cool route.<br><br> Let's go!
+</p>
+<h2>Your Route</h2>
+{% endblock %}
+
+{% block map %}
+<div class="map">
+    {{folium_map|safe}}
+</div>
+{% endblock %}

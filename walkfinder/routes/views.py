@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-import folium
-from .buildmap import buildmap_start
+from .buildmap import buildmap_start, buildmap_route
 
 # Create your views here.
 def home_view(request):
@@ -13,20 +12,47 @@ def home_view(request):
 
 def mapgen_view(request):
     if request.method=='POST':
-        target_time = request.POST.get('target_time')
         lat = request.POST.get('lat')
         lon = request.POST.get('lon')
-        print((target_time,lat,lon))
+        print('======== mapgen_view ========')
+        print((lat,lon))
 
-        map_html = buildmap_start(lat, lon)
-        return render(request, "mapgen.html", {'target_time':target_time, 'lat':lat, 'lon':lon, 'folium_map':map_html})
+        m = buildmap_start(lat, lon)
+        return render(request, "mapgen.html", {'lat':lat, 'lon':lon, 'folium_map':m._repr_html_()})
     
     if request.method=='GET':
         # Change this to URL routing: If user submits GET request manually at URL `/mapgen/` redirect to URL `/`.
         return render(request,"home.html")
 
 def routegen_view(request):
-    return render(request, "routegen.html", {})
+    if request.method=='GET':
+        # m is the folium map from the previous call of mapgen_view().
+        # for now, I'll regenerate it with hard-coded location.
+        # Later, I'll probably store either the map object, or the details needed to regenerate it in the database
+        # ... like under some "Previous Map" location in memory.
+        m = buildmap_start(44.784878,-93.143651)
+
+        return render(request, "routegen.html", {'folium_map':m._repr_html_()})
+
+    if request.method=='POST':
+        target_time = request.POST.get('target_time')
+        # m is the folium map from the previous call of mapgen_view() or routegen_view().
+        # regenerate it for now with hard-coded coordinates
+        # Later, I'll probably store either the map object, or the details needed to regenerate it in the database
+        # ... like under some "Previous Map" location in memory.
+
+        tmp_lat = 44.784878
+        tmp_lon = -93.143651
+
+        m = buildmap_start(tmp_lat, tmp_lon)
+        m = buildmap_route(m, target_time, (tmp_lat, tmp_lon))
+        return render(request, "routegen.html", {'target_time':target_time, 'folium_map':m._repr_html_() })
 
 def walk_view(request):
-    return render(request, "walk.html", {})
+    tmp_lat = 44.784878
+    tmp_lon = -93.143651
+
+    m = buildmap_start(tmp_lat, tmp_lon)
+    m = buildmap_route(m, 10, (tmp_lat, tmp_lon))
+    
+    return render(request, "walk.html", {'folium_map':m._repr_html_() })
