@@ -3,7 +3,7 @@ import folium
 
 def buildmap_start(lat, lon):
     start_loc=(lat,lon)
-    m = folium.Map(location=start_loc, zoom_start=15)
+    m = folium.Map(location=start_loc, zoom_start=16)
     folium.Marker(
         start_loc, 
         icon=folium.Icon(color='red', icon='home', prefix='fa'),
@@ -19,7 +19,7 @@ def buildmap_route(m, target_time, start_loc, end_loc):
 
 
     # set rezzom box for map after adding new marker
-    rezoom_box = [(start_loc[0]-.005, start_loc[1]-.01), (start_loc[0]+.005, start_loc[1]+.01)] # bounding box specified by two points: [southwest, northeast]
+    rezoom_box = [(start_loc[0]-.0025, start_loc[1]-.005), (start_loc[0]+.0025, start_loc[1]+.005)] # bounding box specified by two points: [southwest, northeast]
 
     print('======== buildmap_route() ========')
     print('start_loc is: ',start_loc)

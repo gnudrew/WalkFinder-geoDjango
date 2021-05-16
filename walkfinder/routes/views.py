@@ -68,8 +68,8 @@ def routegen_view(request):
         lon = float(request.session['lon'])
 
         # randomly generate end lat and lon
-        rand_lat = (lat-.01) + .02*r()
-        rand_lon = (lon-.02) + .04*r()
+        rand_lat = (lat-.004) + .008*r()
+        rand_lon = (lon-.008) + .016*r()
         # store to session
         request.session['rand_lat'] = rand_lat
         request.session['rand_lon'] = rand_lon
