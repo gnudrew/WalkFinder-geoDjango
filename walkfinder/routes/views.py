@@ -25,3 +25,8 @@ def mapgen_view(request):
         # Change this to URL routing: If user submits GET request manually at URL `/mapgen/` redirect to URL `/`.
         return render(request,"home.html")
 
+def routegen_view(request):
+    return render(request, "routegen.html", {})
+
+def walk_view(request):
+    return render(request, "walk.html", {})
