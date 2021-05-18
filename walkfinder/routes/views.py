@@ -13,12 +13,12 @@ graph_read = json_graph.adjacency_graph
 def home_view(request):
     # return HttpResponse("<h1>Hello World!</h1>")
     # print(request)
-    # print(render(request, "home.html"))
+    # print(render(request, "base.html"))
 
     # request.session['fav_color']='red'
     # print('Home_View session: fav_color is:', request.session['fav_color'])
 
-    return render(request, "home.html", {})
+    return render(request, "base.html", {})
 
 def mapgen_view(request):
     if request.method=='POST':
@@ -35,11 +35,16 @@ def mapgen_view(request):
         # build map
         m = buildmap_start(lat, lon)
 
-        return render(request, "mapgen.html", {'lat':lat, 'lon':lon, 'folium_map':m._repr_html_()})
+        return render(request, "mapgen.html", 
+            {
+                'lat':lat, 
+                'lon':lon, 
+                'folium_map':m._repr_html_(),
+            })
     
     if request.method=='GET':
         # Change this to URL routing: If user submits GET request manually at URL `/mapgen/` redirect to URL `/`.
-        return render(request,"home.html")
+        return render(request,"base.html")
 
 def routegen_view(request):
     if request.method=='GET':
@@ -76,7 +81,7 @@ def routegen_view(request):
         lon = float(request.session['lon'])
 
         
-        # Build Graph of surrounding walking network. Assume he will walk out then, back, so dist=d/2
+        # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
         speed_meters_per_min = 3*(1609.)/60
         distance = speed_meters_per_min * target_time
         print("target_time TYPE  is:", type(target_time))
@@ -108,7 +113,12 @@ def routegen_view(request):
         # build map
         m = buildmap_start(lat, lon)
         m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G)
-        return render(request, "routegen.html", {'target_time':target_time, 'folium_map':m._repr_html_(), 'number_of_nodes':number_of_nodes })
+        return render(request, "routegen.html", 
+        {
+            'target_time':target_time, 
+            'folium_map':m._repr_html_(), 
+            'number_of_nodes':number_of_nodes, 
+        })
 
 def walk_view(request):
     # retrieve map inputs from session
