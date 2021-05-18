@@ -3,6 +3,11 @@ from django.http import HttpResponse
 
 from .buildmap import buildmap_start, buildmap_route
 from random import random as r # interval r() -> x in [0,1)
+import osmnx as ox
+from networkx.readwrite import json_graph
+graph_write = json_graph.adjacency_data
+graph_read = json_graph.adjacency_graph
+
 
 # Create your views here.
 def home_view(request):
@@ -18,8 +23,8 @@ def home_view(request):
 def mapgen_view(request):
     if request.method=='POST':
         # get form inputs
-        lat = request.POST.get('lat')
-        lon = request.POST.get('lon')
+        lat = float(request.POST.get('lat'))
+        lon = float(request.POST.get('lon'))
         # store to session
         request.session['lat'] = lat
         request.session['lon'] = lon
@@ -53,7 +58,10 @@ def routegen_view(request):
 
     if request.method=='POST':
         # get form input
-        target_time = request.POST.get('target_time')
+        target_time = int(request.POST.get('target_time'))
+
+        # print("~=~== FRESH AFTER POST: time TYPE is...", type(target_time))
+
         # store to session
         request.session['target_time'] = target_time
 
@@ -67,24 +75,49 @@ def routegen_view(request):
         print('LAT is',lat,'with type',type(lat))
         lon = float(request.session['lon'])
 
-        # randomly generate end lat and lon
-        rand_lat = (lat-.004) + .008*r()
-        rand_lon = (lon-.008) + .016*r()
+        
+        # Build Graph of surrounding walking network. Assume he will walk out then, back, so dist=d/2
+        speed_meters_per_min = 3*(1609.)/60
+        distance = speed_meters_per_min * target_time
+        print("target_time TYPE  is:", type(target_time))
+        print("speed_meters_per_min TYPE is:", type(speed_meters_per_min))
+        print("target time: ", target_time, "minutes")
+        print("distance", distance, "meters")
+        G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
+        # store G to session
+        # request.session['G'] = graph_write(G)
+          ## Currently cannot write graphs because type <'Linestring'> is not JSON serializable...
+
+        # End Point: randomly generate lat and lon
+        # rand_lat = (lat-.004) + .008*r()
+        # rand_lon = (lon-.008) + .016*r()
+
+        # get node id's from G
+        node_ids = [node for node in G.nodes]
+        # randomly choose one
+        number_of_nodes = len(node_ids)
+        chosen_one = int(r()*(number_of_nodes-1)) # int() conversion truncates, never rounds up
+        # get lat and lon
+        rand_lat = G.nodes[node_ids[chosen_one]]['y']
+        rand_lon = G.nodes[node_ids[chosen_one]]['x']
         # store to session
         request.session['rand_lat'] = rand_lat
         request.session['rand_lon'] = rand_lon
+
+
         # build map
         m = buildmap_start(lat, lon)
-        m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon))
+        m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G)
         return render(request, "routegen.html", {'target_time':target_time, 'folium_map':m._repr_html_() })
 
 def walk_view(request):
     # retrieve map inputs from session
-    lat = float(request.session['lat'])
-    lon = float(request.session['lon'])
-    rand_lat = float(request.session['rand_lat'])
-    rand_lon = float(request.session['rand_lon'])
-    target_time = int(request.session['target_time'])
+    lat = request.session['lat']
+    lon = request.session['lon']
+    rand_lat = request.session['rand_lat']
+    rand_lon = request.session['rand_lon']
+    target_time = request.session['target_time']
+    # G = graph_read(request.session['G'])
 
     m = buildmap_start(lat, lon)
     m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon))

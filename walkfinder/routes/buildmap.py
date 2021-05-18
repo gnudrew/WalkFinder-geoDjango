@@ -1,5 +1,5 @@
 import folium
-
+import osmnx as ox
 
 def buildmap_start(lat, lon):
     start_loc=(lat,lon)
@@ -13,7 +13,7 @@ def buildmap_start(lat, lon):
 
     return m
 
-def buildmap_route(m, target_time, start_loc, end_loc):
+def buildmap_route(m, target_time, start_loc, end_loc, G=None):
     # add another feature to the map; placeholder for adding future route
     # randomly add a second marker within (lat+/.005, long+/-.01)
 
@@ -35,4 +35,9 @@ def buildmap_route(m, target_time, start_loc, end_loc):
 
     m.fit_bounds(rezoom_box)
 
+    if G is not None:
+        # Plot graph, G, on the folium map
+        m = ox.plot_graph_folium(G, graph_map=m)
+
     return m
+
