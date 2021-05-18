@@ -109,15 +109,23 @@ def routegen_view(request):
         request.session['rand_lat'] = rand_lat
         request.session['rand_lon'] = rand_lon
 
+        # Build Route path (list of nodes) from (lat, lon) to (rand_lat, rand_lon)
+        # Find nearest node to homebase coordinates
+        nn = ox.distance.nearest_nodes(G, lon, lat) # nearest node
+        # if len(nn) > 1:
+        #     nn = nn[0]
+        route = ox.distance.shortest_path(G, nn, node_ids[chosen_one])
 
         # build map
         m = buildmap_start(lat, lon)
-        m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G)
+        m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
         return render(request, "routegen.html", 
         {
             'target_time':target_time, 
             'folium_map':m._repr_html_(), 
-            'number_of_nodes':number_of_nodes, 
+            'number_of_nodes':number_of_nodes,
+            'rand_lat':rand_lat,
+            'rand_lon':rand_lon,
         })
 
 def walk_view(request):
