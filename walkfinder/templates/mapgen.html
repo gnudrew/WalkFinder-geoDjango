@@ -1,5 +1,14 @@
 {% extends "home.html" %}
 
+{% block scriptSetLatLon %}
+<script>
+    var latElement = document.getElementById("lat");
+    var lonElement = document.getElementById("lon");
+    latElement.value = {{lat}};
+    lonElement.value = {{lon}};
+</script>
+{% endblock %}
+
 {% block map %}
     <p> The previous input had latitude {{lat}}° and longitude {{lon}}°.
 

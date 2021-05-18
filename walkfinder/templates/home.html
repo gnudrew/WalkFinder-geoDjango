@@ -21,14 +21,13 @@
             name="lat" 
             min="-90" 
             max="90" 
-            step=".00001" 
+            step=".00001"
             value="44.78488"
             required>
         <br>
-        
         <label for="lon">Longitutde:</label>
         <input 
-            type="number" 
+            type="number"
             id="lon" 
             name="lon" 
             min="-180" 
@@ -39,9 +38,13 @@
         <br>
         <button type="submit">Show Map Location</button>
     </form>
-    <a href="/routegen">Next: Generate Routes</a>
+
+    <a href="/routegen/">Next: Generate Routes</a>
 
     {% endblock %}
+
+    {% block scriptSetLatLon %}{% endblock %}
+    {% block scriptSetTargetTime %}{% endblock %}
 
     <script>
         if (document.getElementById('target_time').value < 0) {

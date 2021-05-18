@@ -21,6 +21,13 @@
 <a href="/walk">Next: Start Walk</a>
 {% endblock %}
 
+{% block scriptSetTargetTime %}
+<script>
+    var timeElement = document.getElementById("target_time");
+    latElement.value = {{target_time}};
+</script>
+{% endblock %}
+
 {% block map %}
     <p> The previous input had a target time of {{target_time}} minutes.<br>
         The resulting network (below) has {{number_of_nodes}} nodes.
