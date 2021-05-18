@@ -132,4 +132,12 @@ def walk_view(request):
     m = buildmap_start(lat, lon)
     m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon))
     
-    return render(request, "walk.html", {'folium_map':m._repr_html_() })
+    return render(request, "walk.html", 
+    {
+        'folium_map':m._repr_html_(), 
+        'lat':lat,
+        'lon':lon,
+        'rand_lat':rand_lat,
+        'rand_lon':rand_lon,
+        'target_time':target_time,
+    })
