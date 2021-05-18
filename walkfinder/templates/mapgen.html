@@ -1,4 +1,4 @@
-{% extends "home.html" %}
+{% extends "base.html" %}
 
 {% block scriptSetLatLon %}
 <script>
@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block map %}
-    <p> The previous input had latitude {{lat}}° and longitude {{lon}}°.
+    <p> SERVER: The previous input had latitude {{lat}}° and longitude {{lon}}°.
 
     </p>
     <div class="map">

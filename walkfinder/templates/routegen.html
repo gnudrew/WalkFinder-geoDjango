@@ -1,9 +1,9 @@
-{% extends "home.html" %}
+{% extends "base.html" %}
 
 {% block input %}
 <p>Nice location!<br><br> Now enter the target time for you walk and let's get generating...
 </p>
-<h2>Controls</h2>
+<h2>Input: Route Generation</h2>
 <form action="/routegen/" method="POST"> {% csrf_token %}
     <label for="target_time">Target Time (mins):</label>
     <input 
@@ -24,12 +24,13 @@
 {% block scriptSetTargetTime %}
 <script>
     var timeElement = document.getElementById("target_time");
-    latElement.value = {{target_time}};
+    timeElement.value = {{target_time}};
 </script>
 {% endblock %}
 
 {% block map %}
-    <p> The previous input had a target time of {{target_time}} minutes.<br>
+    <p> SERVER:<br>
+        The previous input had a target time of {{target_time}} minutes.<br>
         The resulting network (below) has {{number_of_nodes}} nodes.
     </p>
     <div class="map">
