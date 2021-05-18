@@ -108,7 +108,7 @@ def routegen_view(request):
         # build map
         m = buildmap_start(lat, lon)
         m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G)
-        return render(request, "routegen.html", {'target_time':target_time, 'folium_map':m._repr_html_() })
+        return render(request, "routegen.html", {'target_time':target_time, 'folium_map':m._repr_html_(), 'number_of_nodes':number_of_nodes })
 
 def walk_view(request):
     # retrieve map inputs from session

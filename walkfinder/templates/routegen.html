@@ -22,7 +22,9 @@
 {% endblock %}
 
 {% block map %}
-    <p> The previous input had a target time of {{target_time}} minutes.</p>
+    <p> The previous input had a target time of {{target_time}} minutes.<br>
+        The resulting network (below) has {{number_of_nodes}} nodes.
+    </p>
     <div class="map">
         {{folium_map|safe}}
     </div>
