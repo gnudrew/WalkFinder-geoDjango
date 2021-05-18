@@ -88,7 +88,7 @@ def routegen_view(request):
         # request.session['G'] = graph_write(G)
           ## Currently cannot write graphs because type <'Linestring'> is not JSON serializable...
 
-        # End Point: randomly generate lat and lon
+        # Random End Point: randomly generate lat and lon
         # rand_lat = (lat-.004) + .008*r()
         # rand_lon = (lon-.008) + .016*r()
 
@@ -96,7 +96,7 @@ def routegen_view(request):
         node_ids = [node for node in G.nodes]
         # randomly choose one
         number_of_nodes = len(node_ids)
-        chosen_one = int(r()*(number_of_nodes-1)) # int() conversion truncates, never rounds up
+        chosen_one = int(r()*(number_of_nodes)) # int() conversion truncates, never rounds up
         # get lat and lon
         rand_lat = G.nodes[node_ids[chosen_one]]['y']
         rand_lon = G.nodes[node_ids[chosen_one]]['x']
