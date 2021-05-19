@@ -23,7 +23,7 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
     # route : route from starting location to ending location, list of nodes
 
     # set rezzom box for map after adding new marker
-    rezoom_box = [(start_loc[0]-.0025, start_loc[1]-.005), (start_loc[0]+.0025, start_loc[1]+.005)] # bounding box specified by two points: [southwest, northeast]
+    # rezoom_box = [(start_loc[0]-.0025, start_loc[1]-.005), (start_loc[0]+.0025, start_loc[1]+.005)] # bounding box specified by two points: [southwest, northeast]
 
     print('======== buildmap_route() ========')
     print('start_loc is: ',start_loc)
@@ -40,7 +40,7 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
         popup='Target time is '+str(target_time)+' min.',
     ).add_to(m)
 
-    m.fit_bounds(rezoom_box)
+    # m.fit_bounds(rezoom_box)
 
     if G:
         # Plot graph, G, on the folium map
