@@ -81,7 +81,8 @@ DATABASES = {
          'ENGINE': 'django.contrib.gis.db.backends.postgis',
          'NAME': 'postgres',
          'USER': 'postgres',
-         'PASSWORD': 'atlantis',
+         'PASSWORD': 'atlantis', # JG: Load password from ENV var. Key:Val syntax.
+         # look for python module in PyPI (dotenv)
     },
 }
 
