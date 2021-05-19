@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-
+from .models import Mapgens
 from .buildmap import buildmap_start, buildmap_route
+
+from django.contrib.gis.geos import Point
 from random import random as r # interval r() -> x in [0,1)
 import osmnx as ox
 from networkx.readwrite import json_graph
@@ -90,12 +91,29 @@ def routegen_view(request):
 
         # Find nearest node to homebase coordinates
         nn = ox.distance.nearest_nodes(G, lon, lat)
+        nn_lat = G.nodes[nn]['y']
+        nn_lon = G.nodes[nn]['x']
+
         # Find route, a list of nodes, from start to end
         route = ox.distance.shortest_path(G, nn, node_ids[chosen_one])
 
         # build map from these inputs
         m = buildmap_start(lat, lon)
         m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
+
+        # Save inputs to db
+        Mapgens.objects.create(
+            home_loc = Point(y=lat,x=lon),
+            start_loc = Point(y=nn_lat,x=nn_lon),
+            end_loc = Point(y=rand_lat,x=rand_lon),
+            target_time = target_time,
+            speed_mph = 3,
+            speed_mpm = speed_meters_per_min,
+            dist = distance/2,
+            dist_type = "network",
+            network_type = "walk",
+        )
+
         return render(request, "routegen.html", 
         {
             'target_time':target_time, 
