@@ -35,7 +35,7 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
         # colors:
         # purply-blue: #715EC1
 
-        icon=folium.Icon(color='#715EC1', icon='reply', prefix='fa'),
+        icon=folium.Icon(color='', icon='reply', prefix='fa'),
         tooltip='click here for detail',
         popup='Target time is '+str(target_time)+' min.',
     ).add_to(m)

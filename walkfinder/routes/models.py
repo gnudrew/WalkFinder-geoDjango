@@ -13,11 +13,11 @@ class Mapgens(models.Model):
     start_loc    = models.PointField() # (lat,lon) at route start node
     end_loc      = models.PointField(null=True) # (lat,lon) at route end node
     target_time  = models.IntegerField() # minutes
-    speed_mph    = models.DecimalField() # miles per hour, e.g. 3.1mph
-    speed_mpm    = models.DecimalField() # meters per minute
-    dist         = models.DecimalField() # input for ox.graph...
-    dist_type    = models.CharField() # input for ox.graph...
-    network_type = models.CharField() # input for ox.graph...
+    speed_mph    = models.DecimalField(decimal_places=1, max_digits=3) # miles per hour, e.g. 3.1mph
+    speed_mpm    = models.DecimalField(decimal_places=1, max_digits=5) # meters per minute
+    dist         = models.DecimalField(decimal_places=0, max_digits=6) # input for ox.graph...
+    dist_type    = models.CharField(max_length=20) # input for ox.graph... e.g. 'network'
+    network_type = models.CharField(max_length=20) # input for ox.graph... e.g. 'walk'
     # route_ids    = models.IntegerField() # match to Routes objects generated from this
 
 class Routes(models.Model):
