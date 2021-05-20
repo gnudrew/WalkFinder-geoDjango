@@ -31,8 +31,7 @@
 
 {% block scriptSetTargetTime %}
 <script>
-    var timeElement = document.getElementById("target_time");
-    timeElement.value = {{target_time}};
+    $("#target_time").val({{target_time}});
 </script>
 {% endblock %}
 

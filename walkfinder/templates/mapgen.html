@@ -2,10 +2,8 @@
 
 {% block scriptSetLatLon %}
 <script>
-    var latElement = document.getElementById("lat");
-    var lonElement = document.getElementById("lon");
-    latElement.value = {{lat}};
-    lonElement.value = {{lon}};
+    $("#lat").val({{lat}})
+    $("#lon").val({{lon}})
 </script>
 {% endblock %}
 

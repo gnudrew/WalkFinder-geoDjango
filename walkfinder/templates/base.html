@@ -19,6 +19,22 @@
     <p>Looking for some novelty in your daily walk? Aiming for a longer wander? <br><br>Either way, we've got you covered! <br><br>Enter your start position and let's get generating...
     </p>
     <h2>Input: Base Map Generation</h2>
+
+    <script>
+        function getLocation() {     
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else { 
+                $("#no-geo").html("Geolocation is not supported by this browser.");
+            }
+        }
+        function showPosition(position) {
+            $("#lat").val(position.coords.latitude.toFixed(5)); 
+            $("#lon").val(position.coords.longitude.toFixed(5));
+        }
+    </script>
+
+    <button onclick="getLocation()">Get My Location</button><p id="no-geo"></p>
     <form action="/mapgen/" method="POST"> {% csrf_token %}
         <label for="lat">Latitude:</label>
         <input 
