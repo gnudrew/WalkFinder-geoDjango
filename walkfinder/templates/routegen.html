@@ -17,29 +17,44 @@
         type="number" 
         id="target_time" 
         name="target_time" 
-        min="-120" 
+        min="0" 
         max="120" 
         step="1" 
         value="10"
         required>
     <br>
-    <button type="submit">Generate New Route</button>
+    <button id="abc" type="submit">Generate New Route</button>
 </form>
 <a href="/walk">Next: Start Walk</a>
 {% endblock %}
 
 {% block scriptSetTargetTime %}
 <script>
-    var t = $("#target_time")
-    t.val({{target_time}});
-    
-    if (t.val() < 0) {
-            t.setCustomValidity('Sorry, time travel is in Beta testing. Please adhere to entropic time for now.');
+    // persist form value from previous submission
+    $("#target_time").val({{target_time}});
+
+    // set custom validity
+    // NOT WORKING FOR SOME REASON
+    var t = document.getElementById("target_time");
+    // document.getElementById("abc").innterHTML = t.value;
+
+    var validityState_object = t.validity;
+    if (validityState_object.valueMissing) {
+        t.setCustomValidity("Yo, gotta fill this in.");
+        t.reportValidity();
+    }
+    else if (validityState_object.rangeUnderflow) {
+        t.setCustomValidity("Sorry, time travel is currently not supported. Please adhere to entropic time.");
+        t.reportValidity();
+    }
+    else if (validityState_object.rangeOverflow) {
+        t.setCustomValidity("Too high for our server. Please enter a lower value.");
+        t.reportValidity();
     }
     else {
-            t.setCustomValidity('');
+        t.setCustomValidity("");
+        t.reportValidity();
     }
-    
 </script>
 {% endblock %}
 
