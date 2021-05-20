@@ -1,12 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Let's Walk 😎</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'routes/base.css' %}"> <!-- Jinja2 syntax from Django DOCS -->
 </head>
 <body>
+    {% block loading %}
+    {% endblock %}
+
     <h1>Walking Route Generator</h1>
 
     {% block input %}
@@ -57,5 +63,14 @@
 
     {% block map %}{% endblock %}
     
+    <script>
+        $(window).on('load', function () {
+            $('#loading').hide();
+        });
+
+        $(window).on('beforeunload', function() {
+            $('#loading').show();
+        });
+    </script>
 </body>
 </html>

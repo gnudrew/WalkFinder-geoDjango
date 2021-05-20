@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block loading %}
+<div id="loading">
+    <img id="loading-image" src="{% static 'routes/thinker.gif' %}" alt="Loading..." />
+</div>
+{% endblock %}
+
 {% block input %}
 <p>Nice location!<br><br> Now enter the target time for you walk and let's get generating...
 </p>
