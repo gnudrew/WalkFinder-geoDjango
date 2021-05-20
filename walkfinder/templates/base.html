@@ -68,24 +68,17 @@
     {% block scriptSetLatLon %}{% endblock %}
     {% block scriptSetTargetTime %}{% endblock %}
 
-    <script>
-        if (document.getElementById('target_time').value < 0) {
-            document.getElementById('target_time').setCustomValidity('Sorry, time travel is currently in Beta testing. Please adhere to entropic time for now.');
-        }
-        else {
-            document.getElementById('target_time').setCustomValidity('');
-        }
-    </script>
-
     {% block map %}{% endblock %}
     
     <script>
-        $(window).on('load', function () {
-            $('#loading').hide();
-        });
-
+        // show loading gif as server processes request
         $(window).on('beforeunload', function() {
             $('#loading').show();
+        });
+
+        // hide loading gif once page loads
+        $(window).on('load', function () {
+            $('#loading').hide();
         });
     </script>
 </body>

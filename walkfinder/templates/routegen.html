@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load static %}
 
 {% block loading %}
@@ -31,7 +30,16 @@
 
 {% block scriptSetTargetTime %}
 <script>
-    $("#target_time").val({{target_time}});
+    var t = $("#target_time")
+    t.val({{target_time}});
+    
+    if (t.val() < 0) {
+            t.setCustomValidity('Sorry, time travel is in Beta testing. Please adhere to entropic time for now.');
+    }
+    else {
+            t.setCustomValidity('');
+    }
+    
 </script>
 {% endblock %}
 
