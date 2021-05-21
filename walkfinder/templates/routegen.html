@@ -2,12 +2,33 @@
 {% load static %}
 
 {% block loading %}
+
 <div id="loading">
     <img id="loading-image" src="{% static 'routes/thinker.gif' %}" alt="Loading..." />
 </div>
-<div id="timetravel">
-    <img id="timetravel-image" src="{% static 'routes/creepy-hand.gif' %}" alt="Firing up Flux Capacitor..."/>
-</div>
+
+<div id="timetravel" hidden>
+    <img id="timetravel-image" src="{% static 'routes/delorean.gif' %}" alt="Firing up Flux Capacitor..."/>
+</div> 
+
+<script>
+    // show loading gif while server processes request
+    // $(window).on('beforeunload', () => {
+    //     $('#loading').show();
+    // });
+    window.addEventListener("beforeunload", () => {
+        document.getElementById("loading").style.display = "flex";
+    });
+
+    // hide loading gif once page loads
+    // $(window).on('load', () => {
+    //     $('#loading').hide();
+    //     $('#timetravel').hide();
+    // });
+
+
+</script>
+
 {% endblock %}
 
 {% block input %}
@@ -47,7 +68,7 @@
             console.log('Inside IF :: rangeUnderflow==True')
             input.setCustomValidity("Time travel is currently in Beta. Please adhere to entropic time for now.");
             $('#timetravel').show();
-            setTimeout(() => {$('#timetravel').hide()}, 1500);
+            setTimeout(() => {$('#timetravel').hide()}, 4000);
         }
     }
 

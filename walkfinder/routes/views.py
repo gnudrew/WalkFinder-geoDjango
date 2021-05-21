@@ -121,7 +121,7 @@ def routegen_view(request):
             # rebuild map
             m = buildmap_start(lat, lon)
             # exception html
-            except_html = "<h1>Processing Error Occured</h1><p>The walking network within your inputs is too small. Please increase your target time or relocate near a denser path network and try again.<p>"
+            except_html = "<h1>Processing Error Occured</h1><p>We found a valid start node, but the walking network within your inputs is too small. Please increase your target time or relocate and try again.<p>"
 
             return render(request, "routegen.html", 
             {
