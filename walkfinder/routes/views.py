@@ -77,7 +77,7 @@ def routegen_view(request):
             # rebuild map
             m = buildmap_start(lat, lon)
             # Build error html
-            except_html = "<h1>Processing Error occured</h1><p>No walking nodes found in search radius. Either you're out in the boonies or your target time is too small. Please adjust your inputs and try again.<p>"
+            except_html = "<h1>Processing Error occured</h1><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.<p>"
             return render(request, "routegen.html", 
             {
                 'folium_map':m._repr_html_(), 

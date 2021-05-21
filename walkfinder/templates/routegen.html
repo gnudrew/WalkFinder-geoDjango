@@ -63,12 +63,14 @@
 
     // set custom validity for time < 0, and timetravel effect
     function check(input) {
-        console.log('inside check() function :: oninput')
         if (input.validity.rangeUnderflow) {
-            console.log('Inside IF :: rangeUnderflow==True')
-            input.setCustomValidity("Time travel is currently in Beta. Please adhere to entropic time for now.");
+            input.setCustomValidity("Time travel is currently in Beta. Please stick with entropic time for now.");
             $('#timetravel').show();
             setTimeout(() => {$('#timetravel').hide()}, 4000);
+        } else if (input.validity.rangeOverflow) {
+            input.setCustomValidity("Please enter a smaller number.")
+        } else {
+            input.setCustomValidity("")
         }
     }
 
