@@ -5,6 +5,7 @@ from .buildmap import buildmap_start, buildmap_route
 from django.contrib.gis.geos import Point
 from random import random as r # interval r() -> x in [0,1)
 import osmnx as ox
+from networkx import NetworkXPointlessConcept
 from networkx.readwrite import json_graph
 graph_write = json_graph.adjacency_data
 graph_read = json_graph.adjacency_graph
@@ -45,7 +46,7 @@ def routegen_view(request):
         # retrieve session inputs
         lat = request.session['lat']
         lon = request.session['lon']
-        # build map
+        # rebuild map
         m = buildmap_start(lat,lon)
 
         return render(request, "routegen.html", 
@@ -68,11 +69,25 @@ def routegen_view(request):
         # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
         speed_meters_per_min = 3*(1609.)/60
         distance = speed_meters_per_min * target_time
-        print("target_time TYPE  is:", type(target_time))
-        print("speed_meters_per_min TYPE is:", type(speed_meters_per_min))
-        print("target time: ", target_time, "minutes")
-        print("distance", distance, "meters")
-        G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
+    
+        try: # got ValueError "found no graph nodes within the requested polygon"
+            G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
+        except (ValueError, NetworkXPointlessConcept) as err:
+            print(err)
+            # rebuild map
+            m = buildmap_start(lat, lon)
+            # Build error html
+            except_html = "<h1>Processing Error occured</h1><p>No walking nodes found in search radius. Either you're out in the boonies or your target time is too small. Please adjust your inputs and try again.<p>"
+            return render(request, "routegen.html", 
+            {
+                'folium_map':m._repr_html_(), 
+                'except_html':except_html,
+                'target_time':target_time, 
+                # 'number_of_nodes':number_of_nodes,
+                # 'rand_lat':rand_lat,
+                # 'rand_lon':rand_lon,                
+            })
+
         # store G to session
         # request.session['G'] = graph_write(G)
           ## Currently cannot write graphs because type <'Linestring'> is not JSON serializable...
@@ -99,7 +114,24 @@ def routegen_view(request):
 
         # build map from these inputs
         m = buildmap_start(lat, lon)
-        m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
+        try: # got ValueError : "graph contains no edges"
+            m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
+        except ValueError as err: # likely graph has no edges
+            print(err)
+            # rebuild map
+            m = buildmap_start(lat, lon)
+            # exception html
+            except_html = "<h1>Processing Error Occured</h1><p>The walking network within your inputs is too small. Please increase your target time or relocate near a denser path network and try again.<p>"
+
+            return render(request, "routegen.html", 
+            {
+                'folium_map':m._repr_html_(), 
+                'except_html':except_html,
+                'target_time':target_time, 
+                'number_of_nodes':number_of_nodes,
+                'rand_lat':rand_lat,
+                'rand_lon':rand_lon,                
+            })
 
         # Save inputs to db
         Mapgens.objects.create(

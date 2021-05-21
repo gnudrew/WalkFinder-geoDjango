@@ -16,6 +16,7 @@
     Now enter the target time for you walk and let's get generating...
 </p>
 <h2>Input: Route Generation</h2>
+{{except_html|safe}}
 <form action="/routegen/" method="POST"> {% csrf_token %}
     <label for="target_time">Target Time (mins):</label>
     <input 
