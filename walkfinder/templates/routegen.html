@@ -5,16 +5,22 @@
 <div id="loading">
     <img id="loading-image" src="{% static 'routes/thinker.gif' %}" alt="Loading..." />
 </div>
+<div id="timetravel">
+    <img id="timetravel-image" src="{% static 'routes/creepy-hand.gif' %}" alt="Firing up Flux Capacitor..."/>
+</div>
 {% endblock %}
 
 {% block input %}
-<p>Nice location!<br><br> Now enter the target time for you walk and let's get generating...
+<p>
+    Nice location!<br>
+    Now enter the target time for you walk and let's get generating...
 </p>
 <h2>Input: Route Generation</h2>
 <form action="/routegen/" method="POST"> {% csrf_token %}
     <label for="target_time">Target Time (mins):</label>
     <input 
-        type="number" 
+        oninput="check(this)"
+        type="number"
         id="target_time" 
         name="target_time" 
         min="0" 
@@ -33,28 +39,17 @@
     // persist form value from previous submission
     $("#target_time").val({{target_time}});
 
-    // set custom validity
-    // NOT WORKING FOR SOME REASON
-    var t = document.getElementById("target_time");
-    // document.getElementById("abc").innterHTML = t.value;
+    // set custom validity for time < 0, and timetravel effect
+    function check(input) {
+        console.log('inside check() function :: oninput')
+        if (input.validity.rangeUnderflow) {
+            console.log('Inside IF :: rangeUnderflow==True')
+            input.setCustomValidity("Time travel is currently in Beta. Please adhere to entropic time for now.");
+            $('#timetravel').show();
+            setTimeout(() => {$('#timetravel').hide()}, 1500);
+        }
+    }
 
-    var validityState_object = t.validity;
-    if (validityState_object.valueMissing) {
-        t.setCustomValidity("Yo, gotta fill this in.");
-        t.reportValidity();
-    }
-    else if (validityState_object.rangeUnderflow) {
-        t.setCustomValidity("Sorry, time travel is currently not supported. Please adhere to entropic time.");
-        t.reportValidity();
-    }
-    else if (validityState_object.rangeOverflow) {
-        t.setCustomValidity("Too high for our server. Please enter a lower value.");
-        t.reportValidity();
-    }
-    else {
-        t.setCustomValidity("");
-        t.reportValidity();
-    }
 </script>
 {% endblock %}
 
