@@ -41,11 +41,19 @@
             document.forms["mapgen"].submit()
 
         }
+        function showMapgenForm() {
+            var f = document.forms["mapgen"]
+            f.hidden = !f.hidden 
+            
+        }
     </script>
 
-    <button onclick="getLocation()">Get My Location</button><p id="no-geo"></p>
+    <p id="no-geo"></p>
+    <button onclick="getLocation()">Get My GPS Location</button>
+    <button onclick="showMapgenForm()">Enter Location Manually</button>
+    <br>
 
-    <form id="mapgen" action="/mapgen/" method="POST"> {% csrf_token %}
+    <form id="mapgen" action="/mapgen/" method="POST" hidden> {% csrf_token %}
         <label for="lat">Latitude:</label>
         <input 
             type="number" 
