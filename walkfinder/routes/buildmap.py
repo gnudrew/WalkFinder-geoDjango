@@ -4,12 +4,15 @@ import osmnx as ox
 def buildmap_start(lat, lon):
     start_loc=(lat,lon)
     m = folium.Map(location=start_loc, zoom_start=16)
+
     folium.Marker(
         start_loc, 
         icon=folium.Icon(color='red', icon='home', prefix='fa'), 
         tooltip='click here for detail', 
         popup='Homebase at '+str(start_loc), 
     ).add_to(m)
+
+    folium.TileLayer('Stamen Terrain').add_to(m)
 
     return m
 

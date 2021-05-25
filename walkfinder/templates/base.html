@@ -86,7 +86,11 @@
     {% block scriptSetLatLon %}{% endblock %}
     {% block scriptSetTargetTime %}{% endblock %}
 
-    {% block map %}{% endblock %}
+    <div>
+        <div id="map">
+        {% block map %}{% endblock %}
+        </div>
+    </div>
     
 
 </body>

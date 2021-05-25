@@ -37,3 +37,28 @@
     width: 100%;
     z-index: 100;
   }
+
+  @media screen and (max-width:1000px) {
+    #map {
+      padding-right: 10%;
+      padding-top: 0%;
+    }
+  }
+
+  @media screen and (max-width:800px) {
+    #map {
+      padding-right: 8%;
+      padding-top: 0%;    }
+  }
+
+  @media screen and (max-width:700px) {
+    #map {
+      padding-right: 5%;
+      padding-top: 0%;    }
+  }
+
+  @media screen and (max-width:500px) {
+    #map {
+      padding-right: 0%;
+      padding-top: 0%;    }
+  }
