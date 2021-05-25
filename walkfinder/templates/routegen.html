@@ -2,8 +2,7 @@
 {% load static %}
 
 {% block loading %}
-
-<div id="loading">
+<div id="loading" hidden>
     <img id="loading-image" src="{% static 'routes/thinker.gif' %}" alt="Loading..." />
 </div>
 
@@ -13,22 +12,23 @@
 
 <script>
     // show loading gif while server processes request
-    // $(window).on('beforeunload', () => {
-    //     $('#loading').show();
-    // });
-    window.addEventListener("beforeunload", () => {
-        document.getElementById("loading").style.display = "flex";
+    $(window).on('beforeunload', () => {
+        $('#loading').show();
     });
+    // document.addEventListener("DOMContentLoaded", () => {
+    // $(document).ready(() => {
+    //     window.addEventListener("beforeunload", () => {
+    //         document.getElementById("loading").style.display = "flex";
+    //     }); 
+    // })
+
 
     // hide loading gif once page loads
     // $(window).on('load', () => {
     //     $('#loading').hide();
     //     $('#timetravel').hide();
     // });
-
-
 </script>
-
 {% endblock %}
 
 {% block input %}
@@ -41,9 +41,9 @@
 <form action="/routegen/" method="POST"> {% csrf_token %}
     <label for="target_time">Target Time (mins):</label>
     <input 
-        oninput="check(this)"
+        onchange="check(this)"
         type="number"
-        id="target_time" 
+        id="target_time"
         name="target_time" 
         min="0" 
         max="120" 
@@ -59,6 +59,8 @@
 {% block scriptSetTargetTime %}
 <script>
     // persist form value from previous submission
+    // var time = document.getElementById("target_time");
+    // time.value = {{target_time}};
     $("#target_time").val({{target_time}});
 
     // set custom validity for time < 0, and timetravel effect
@@ -66,13 +68,19 @@
         if (input.validity.rangeUnderflow) {
             input.setCustomValidity("Time travel is currently in Beta. Please stick with entropic time for now.");
             $('#timetravel').show();
-            setTimeout(() => {$('#timetravel').hide()}, 4000);
+            // document.getElementById("timetravel").style.display = "flex";
+            setTimeout(() => {
+                document.getElementById("timetravel").style.display = "none";
+                //$('#timetravel').hide();
+            }, 4000);
         } else if (input.validity.rangeOverflow) {
             input.setCustomValidity("Please enter a smaller number.")
         } else {
-            input.setCustomValidity("")
+            input.setCustomValidity("");
         }
     }
+
+    // time.addEventListener("change", check(time) );
 
 </script>
 {% endblock %}

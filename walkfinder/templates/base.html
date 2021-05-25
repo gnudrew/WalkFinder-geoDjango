@@ -30,7 +30,8 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
             } else { 
-                $("#no-geo").html("Geolocation is not supported by this browser.");
+                document.getElementById("no-geo").innerHTML = 
+                "GeoLocation is not supported by this browser.";
             }
         }
         function showPosition(position) {
