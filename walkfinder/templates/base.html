@@ -37,12 +37,15 @@
         function showPosition(position) {
             $("#lat").val(position.coords.latitude.toFixed(5)); 
             $("#lon").val(position.coords.longitude.toFixed(5));
+            // submit form
+            document.forms["mapgen"].submit()
+
         }
     </script>
 
     <button onclick="getLocation()">Get My Location</button><p id="no-geo"></p>
 
-    <form action="/mapgen/" method="POST"> {% csrf_token %}
+    <form id="mapgen" action="/mapgen/" method="POST"> {% csrf_token %}
         <label for="lat">Latitude:</label>
         <input 
             type="number" 
