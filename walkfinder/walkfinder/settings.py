@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,15 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vs2n&0m8iwe$t7wl9+*yh#r1oz3v#itzxa*=%25lj%c9^n1=@='
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -131,3 +123,16 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # GDAL_LIBRARY_PATH = 'C:\OSGeo4W64\share\gdal'
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# PRODUCTION CHECKLIST
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get('SECRET_KEY','abc123')
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+ALLOWED_HOSTS = []
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
