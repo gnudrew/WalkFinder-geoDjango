@@ -73,7 +73,7 @@ def routegen_view(request):
         try: # got ValueError "found no graph nodes within the requested polygon"
             G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
         except (ValueError, NetworkXPointlessConcept) as err:
-            print(err)
+            print("Exception:", err.__str__(), "; Cause:", err.__cause__)
             # rebuild map
             m = buildmap_start(lat, lon)
             # Build error html
