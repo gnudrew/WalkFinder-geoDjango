@@ -135,7 +135,7 @@ def routegen_view(request):
         
         except Exception as err:
             print("Exception:", type(err), "; Description:", err)
-                        print("Exception:", type(err), "; Description:", err)
+                        
             # rebuild map
             m = buildmap_start(lat, lon)
             # exception html
