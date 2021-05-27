@@ -1,0 +1,6 @@
+python==3.9.*
+osmnx==1.1.*
+django==3.2.*
+psycopg2==2.8*
+whitenoise==5.2.*
+gunicorn==20.1.*
