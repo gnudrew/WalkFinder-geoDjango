@@ -73,7 +73,7 @@ def routegen_view(request):
         try: # got ValueError "found no graph nodes within the requested polygon"
             G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
         except (ValueError, NetworkXPointlessConcept) as err:
-            print("Exception:", type(err), "; Description:", err)
+            print("EXCEPTED:", type(err), "; MESSAGE:", err)
             # rebuild map
             m = buildmap_start(lat, lon)
             # Build error html
@@ -117,7 +117,7 @@ def routegen_view(request):
         try: # got ValueError : "graph contains no edges"
             m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
         except ValueError as err: # likely graph has no edges
-            print("Exception:", type(err), "; Description:", err)
+            print("EXCEPTED:", type(err), "; MESSAGE:", err)
             # rebuild map
             m = buildmap_start(lat, lon)
             # exception html
@@ -133,8 +133,8 @@ def routegen_view(request):
                 'rand_lon':rand_lon,                
             })
         
-        except Exception as err:
-            print("Exception:", type(err), "; Description:", err)
+        except BaseException as err:
+            print("EXCEPTED:", type(err), "; MESSAGE:", err)
                         
             # rebuild map
             m = buildmap_start(lat, lon)
