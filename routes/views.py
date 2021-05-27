@@ -132,9 +132,8 @@ def routegen_view(request):
                 'rand_lat':rand_lat,
                 'rand_lon':rand_lon,                
             })
-        
-        except BaseException as err:
-            print("EXCEPTED:", type(err), "; MESSAGE:", err)
+        except:
+            print("EXCEPTED: unkown; MESSAGE: unkown")
                         
             # rebuild map
             m = buildmap_start(lat, lon)
