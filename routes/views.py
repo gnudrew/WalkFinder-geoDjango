@@ -73,11 +73,11 @@ def routegen_view(request):
         try: # got ValueError "found no graph nodes within the requested polygon"
             G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
         except (ValueError, NetworkXPointlessConcept) as err:
-            print("Exception:", err.__str__(), "; Cause:", err.__cause__)
+            print("Exception:", type(err), "; Description:", err)
             # rebuild map
             m = buildmap_start(lat, lon)
             # Build error html
-            except_html = "<h1>Processing Error occured</h1><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.<p>"
+            except_html = "<h1>Processing Error</h1><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p>"
             return render(request, "routegen.html", 
             {
                 'folium_map':m._repr_html_(), 
@@ -117,11 +117,29 @@ def routegen_view(request):
         try: # got ValueError : "graph contains no edges"
             m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
         except ValueError as err: # likely graph has no edges
-            print(err)
+            print("Exception:", type(err), "; Description:", err)
             # rebuild map
             m = buildmap_start(lat, lon)
             # exception html
-            except_html = "<h1>Processing Error Occured</h1><p>We found a valid start node, but the walking network within your inputs is too small. Please increase your target time or relocate and try again.<p>"
+            except_html = "<h1>Processing Error</h1><p>We found a valid start node, but the walking network within your inputs is too small. Please increase your target time or relocate and try again.</p>"
+
+            return render(request, "routegen.html", 
+            {
+                'folium_map':m._repr_html_(), 
+                'except_html':except_html,
+                'target_time':target_time, 
+                'number_of_nodes':number_of_nodes,
+                'rand_lat':rand_lat,
+                'rand_lon':rand_lon,                
+            })
+        
+        except Exception as err:
+            print("Exception:", type(err), "; Description:", err)
+                        print("Exception:", type(err), "; Description:", err)
+            # rebuild map
+            m = buildmap_start(lat, lon)
+            # exception html
+            except_html = "<h1>Processing Error</h1><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p>"
 
             return render(request, "routegen.html", 
             {
