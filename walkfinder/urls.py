@@ -25,5 +25,5 @@ urlpatterns = [
     path('mapgen/', mapgen_view),
     path('routegen/', routegen_view),
     path('walk/', walk_view),
-    # path('favicon.ico', RedirectView.as_view(url='favicon.svg'))
+    path('favicon.ico', RedirectView.as_view(url='favicon.svg'))
 ]
