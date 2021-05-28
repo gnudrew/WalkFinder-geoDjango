@@ -15,11 +15,12 @@
     // $(window).on('beforeunload pagehide', () => {
     //     $('#loading').show();
     // });
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("form").addEventListener('submit', () => {
-            document.getElementById("loading").style.display = "flex";
-        })
-    });
+
+    // document.addEventListener("DOMContentLoaded", () => {
+    //     document.getElementById("form").addEventListener('submit', () => {
+    //         document.getElementById("loading").removeAttribute("hidden");
+    //     })
+    // });
 </script>
 {% endblock %}
 
@@ -50,6 +51,11 @@
 
 {% block scriptSetTargetTime %}
 <script>
+    // show loading gif after form submit while server processes request
+    document.getElementById("form_time").addEventListener('submit', () => {
+        document.getElementById("loading").removeAttribute("hidden");
+    });
+
     // persist form value from previous submission
     // var time = document.getElementById("target_time");
     // time.value = {{target_time}};
@@ -62,8 +68,8 @@
             $('#timetravel').show();
             // document.getElementById("timetravel").style.display = "flex";
             setTimeout(() => {
-                document.getElementById("timetravel").style.display = "none";
-                //$('#timetravel').hide();
+                // document.getElementById("timetravel").style.display = "none";
+                $('#timetravel').hide();
             }, 4000);
         } else if (input.validity.rangeOverflow) {
             input.setCustomValidity("Please enter a smaller number.")

@@ -1,20 +1,20 @@
 #loading {
   height: 100vh;
   width: 100vw;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  
+  position: relative;
   opacity: 0.8;
-  background-color: #fff;
-  z-index: 99;
+  background: rgb(181, 209, 209);
   }
   
 #loading-image {
-  max-width: 100%;
-  height: 100%;
-  z-index: 100;
+  height: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
+
+/* Using display: flex to show...
 
 #timetravel {
   height: 100vh;
@@ -22,16 +22,29 @@
   display: none;
   justify-content: center;
   align-items: center;
-  
   opacity: 0.7;
-  background-color: #fff;
-  z-index: 99;
 }
 
 #timetravel-image {
   width: 100%;
   max-height: 100%;
-  z-index: 100;
+} */
+
+/* Using Transform method to center image */
+#timetravel {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  opacity: 0.7;
+  background: Tomato;
+}
+
+#timetravel-image {
+  width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #map {
