@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
+    # 'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -124,7 +124,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # The absolute path to the directory from which Whitenoise will serve all files at '/'
 # E.g. 'favicon.ico'
-WHITENOISE_ROOT = os.path.join(BASE_DIR, 'root_staticfiles') # place favicon.svg in root_staticfiles/
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'root_staticfiles') # make sure to put favicon.svg here
 # See: https://stackoverflow.com/questions/65927187/how-to-server-favicon-ico-with-django-and-whitenoise
 
 # Simplified static file serving.
@@ -160,6 +160,7 @@ DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Configure level of detail in Heroku Server LOGs
+# See: https://stackoverflow.com/questions/51466192/server-error-500-django-deployment-on-heroku
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
