@@ -121,10 +121,13 @@ STATIC_URL = '/static/'
 
 # The absolute path to the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    "root_staticfiles",
+]
 
 # The absolute path to the directory from which Whitenoise will serve all files at '/'
 # E.g. 'favicon.ico'
-WHITENOISE_ROOT = os.path.join(BASE_DIR, 'root_staticfiles') # make sure to put favicon.svg here
+WHITENOISE_ROOT = os.path.join(STATIC_ROOT, 'root')
 # See: https://stackoverflow.com/questions/65927187/how-to-server-favicon-ico-with-django-and-whitenoise
 
 # Simplified static file serving.
