@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -119,7 +120,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # The absolute path to the directory where collectstatic will collect static files for deployment.
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# The absolute path to the directory from which Whitenoise will serve all files at '/'
+# E.g. 'favicon.ico'
+WHITENOISE_ROOT = os.path.join(BASE_DIR, 'root_staticfiles') # place favicon.svg in root_staticfiles/
+# See: https://stackoverflow.com/questions/65927187/how-to-server-favicon-ico-with-django-and-whitenoise
 
 # Simplified static file serving.
 # https://pypi.org/project/whitenoise/
@@ -148,10 +154,7 @@ SECURE_SSL_REDIRECT = True
 # Heroku: Update database configuration from $DATABASE_URL.
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
-print('===== DB config BEFORE:', db_from_env, '=====')
 DATABASES['default'].update(db_from_env)
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-print('===== DB config AFTER:', DATABASES['default'], '=====')
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
