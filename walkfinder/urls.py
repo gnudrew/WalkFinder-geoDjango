@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from routes.views import home_view, mapgen_view, routegen_view, walk_view
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +25,9 @@ urlpatterns = [
     path('mapgen/', mapgen_view),
     path('routegen/', routegen_view),
     path('walk/', walk_view),
+    path(
+        'favicon.ico', 
+        RedirectView.as_view(url=staticfiles_storage.url("favicon.ico"))
+    )
 
 ]
