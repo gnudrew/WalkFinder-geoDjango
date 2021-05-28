@@ -12,22 +12,14 @@
 
 <script>
     // show loading gif while server processes request
-    $(window).on('beforeunload pagehide', () => {
-        $('#loading').show();
-    });
-    // document.addEventListener("DOMContentLoaded", () => {
-    // $(document).ready(() => {
-    //     window.addEventListener("beforeunload", () => {
-    //         document.getElementById("loading").style.display = "flex";
-    //     }); 
-    // })
-
-
-    // hide loading gif once page loads
-    // $(window).on('load', () => {
-    //     $('#loading').hide();
-    //     $('#timetravel').hide();
+    // $(window).on('beforeunload pagehide', () => {
+    //     $('#loading').show();
     // });
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("form").addEventListener('submit', () => {
+            document.getElementById("loading").style.display = "flex";
+        })
+    });
 </script>
 {% endblock %}
 
@@ -38,7 +30,7 @@
 </p>
 <h2>Input: Route Generation</h2>
 {{except_html|safe}}
-<form action="/routegen/" method="POST"> {% csrf_token %}
+<form id="form_time" action="/routegen/" method="POST"> {% csrf_token %}
     <label for="target_time">Target Time (mins):</label>
     <input 
         onchange="check(this)"
