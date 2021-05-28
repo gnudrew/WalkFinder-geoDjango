@@ -7,12 +7,12 @@
 </div>
 
 <div id="timetravel" hidden>
-    <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up Flux Capacitor..."/>
+    <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up the Flux Capacitor..."/>
 </div> 
 
 <script>
     // show loading gif while server processes request
-    $(window).on('beforeunload', () => {
+    $(window).on('beforeunload pagehide', () => {
         $('#loading').show();
     });
     // document.addEventListener("DOMContentLoaded", () => {
