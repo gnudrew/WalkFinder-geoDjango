@@ -87,23 +87,23 @@ def routegen_view(request):
                 # 'rand_lat':rand_lat,
                 # 'rand_lon':rand_lon,                
             })
-        except:
-            print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
+        # except:
+        #     print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
                         
-            # rebuild map
-            m = buildmap_start(lat, lon)
-            # exception html
-            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
+        #     # rebuild map
+        #     m = buildmap_start(lat, lon)
+        #     # exception html
+        #     except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
 
-            return render(request, "routegen.html", 
-            {
-                'folium_map':m._repr_html_(), 
-                'except_html':except_html,
-                'target_time':target_time, 
-                # 'number_of_nodes':number_of_nodes,
-                # 'rand_lat':rand_lat,
-                # 'rand_lon':rand_lon,                
-            })            
+        #     return render(request, "routegen.html", 
+        #     {
+        #         'folium_map':m._repr_html_(), 
+        #         'except_html':except_html,
+        #         'target_time':target_time, 
+        #         # 'number_of_nodes':number_of_nodes,
+        #         # 'rand_lat':rand_lat,
+        #         # 'rand_lon':rand_lon,                
+        #     })            
 
         # store G to session
         # request.session['G'] = graph_write(G)
@@ -149,23 +149,23 @@ def routegen_view(request):
                 'rand_lat':rand_lat,
                 'rand_lon':rand_lon,                
             })
-        except:
-            print("EXCEPTED: unkown; MESSAGE: Try: call of buildmap_route() in routegen_view()")
+        # except:
+        #     print("EXCEPTED: unkown; MESSAGE: Try: call of buildmap_route() in routegen_view()")
                         
-            # rebuild map
-            m = buildmap_start(lat, lon)
-            # exception html
-            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
+        #     # rebuild map
+        #     m = buildmap_start(lat, lon)
+        #     # exception html
+        #     except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
 
-            return render(request, "routegen.html", 
-            {
-                'folium_map':m._repr_html_(), 
-                'except_html':except_html,
-                'target_time':target_time, 
-                'number_of_nodes':number_of_nodes,
-                'rand_lat':rand_lat,
-                'rand_lon':rand_lon,                
-            })
+        #     return render(request, "routegen.html", 
+        #     {
+        #         'folium_map':m._repr_html_(), 
+        #         'except_html':except_html,
+        #         'target_time':target_time, 
+        #         'number_of_nodes':number_of_nodes,
+        #         'rand_lat':rand_lat,
+        #         'rand_lon':rand_lon,                
+        #     })
 
         # Save inputs to db
         Mapgens.objects.create(
