@@ -77,7 +77,7 @@ def routegen_view(request):
             # rebuild map
             m = buildmap_start(lat, lon)
             # Build error html
-            except_html = "<h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p>"
+            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p></div>"
             return render(request, "routegen.html", 
             {
                 'folium_map':m._repr_html_(), 
@@ -93,7 +93,7 @@ def routegen_view(request):
             # rebuild map
             m = buildmap_start(lat, lon)
             # exception html
-            except_html = "<h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p>"
+            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
 
             return render(request, "routegen.html", 
             {
@@ -138,7 +138,7 @@ def routegen_view(request):
             # rebuild map
             m = buildmap_start(lat, lon)
             # exception html
-            except_html = "<h3>Processing Error</h3><p>We found a valid start node, but the walking network within your inputs is too small. Please increase your target time or relocate and try again.</p>"
+            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>We found a valid start node, but the walking network within your inputs is too small. Please increase your target time or relocate and try again.</p></div>"
 
             return render(request, "routegen.html", 
             {
@@ -155,7 +155,7 @@ def routegen_view(request):
             # rebuild map
             m = buildmap_start(lat, lon)
             # exception html
-            except_html = "<h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p>"
+            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
 
             return render(request, "routegen.html", 
             {
