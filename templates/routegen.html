@@ -3,6 +3,7 @@
 
 
 {% block input %}
+{% if not is_POST_request %}
 <article class="message is-warning">
     <div class="message-header">
         <p>Not a bad spot</p>
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 </script>
+{% endif %}
 
 <p class="title">(Step 2) How long?</h2>
 

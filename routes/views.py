@@ -51,7 +51,8 @@ def routegen_view(request):
 
         return render(request, "routegen.html", 
         {
-            'folium_map':m._repr_html_()
+            'folium_map':m._repr_html_(),
+            'is_POST_request':False,
         })
 
     if request.method=='POST':
@@ -80,6 +81,7 @@ def routegen_view(request):
             except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p></div>"
             return render(request, "routegen.html", 
             {
+                'is_POST_request':True,
                 'folium_map':m._repr_html_(), 
                 'except_html':except_html,
                 'target_time':target_time, 
@@ -97,6 +99,7 @@ def routegen_view(request):
 
             return render(request, "routegen.html", 
             {
+                'is_POST_request':True,
                 'folium_map':m._repr_html_(), 
                 'except_html':except_html,
                 'target_time':target_time, 
@@ -142,6 +145,7 @@ def routegen_view(request):
 
             return render(request, "routegen.html", 
             {
+                'is_POST_request':True,
                 'folium_map':m._repr_html_(), 
                 'except_html':except_html,
                 'target_time':target_time, 
@@ -159,6 +163,7 @@ def routegen_view(request):
 
             return render(request, "routegen.html", 
             {
+                'is_POST_request':True,
                 'folium_map':m._repr_html_(), 
                 'except_html':except_html,
                 'target_time':target_time, 
@@ -182,6 +187,7 @@ def routegen_view(request):
 
         return render(request, "routegen.html", 
         {
+            'is_POST_request':True,
             'target_time':target_time, 
             'folium_map':m._repr_html_(), 
             'number_of_nodes':number_of_nodes,
