@@ -1,6 +1,55 @@
 {% extends "base.html" %}
 {% load static %}
 
+
+{% block input %}
+<article class="message is-warning">
+    <div class="message-header">
+        <p>Not a bad spot</p>
+        <button class="delete" aria-label="delete is-medium"></button>
+    </div>
+    <div class="message-body">
+        Great. Your embarkation location is locked and loaded. Now let's add an upper time limit for the round trip and start generating some routes. When you're satisfied, hit the "Next" button below to begin the walk. <br><br>Tip: Press the "Route" button again to generate another random routes. 🐱‍👤
+    </div>
+</article>
+<!-- Add script to remove message when delete button is clicked -->
+<script> 
+document.addEventListener('DOMContentLoaded', () => {
+    (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
+      const $message = $delete.parentNode.parentNode;
+  
+      $delete.addEventListener('click', () => {
+        $message.parentNode.removeChild($message);
+      });
+    });
+  });
+</script>
+
+<p class="title">(Step 2) How long?</h2>
+
+{{except_html|safe}}
+
+<form class="box" id="form_time" action="/routegen/" method="POST"> {% csrf_token %}
+    <div class="field">
+        <label class="label" for="target_time">Target Time (mins):</label>
+        <div class="control">
+            <input class = "input"
+                onchange="check(this)"
+                type="number"
+                id="target_time"
+                name="target_time" 
+                min="0" 
+                max="120" 
+                step="1" 
+                value="10"
+                required>
+        </div>
+    </div>
+    <button class="button is-primary" id="abc" type="submit">Find a Route</button>
+    <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
+</form>
+{% endblock %}
+
 {% block loading %}
 <div id="loading" hidden>
     <img id="loading-image" src="{% static 'routes/img/thinker.gif' %}" alt="Loading..." />
@@ -22,55 +71,6 @@
     //     })
     // });
 </script>
-{% endblock %}
-
-{% block input %}
-<article class="message is-warning">
-    <div class="message-header">
-        <p>Not a bad spot</p>
-        <button class="delete" aria-label="delete is-medium"></button>
-    </div>
-    <div class="message-body">
-        Great. Your embarcation location is locked and loaded. Now let's add an upper time limit for the round trip and start generating some routes. When you're satisfied with a route, hit the "Next" button below to begin the walk. <br><br>Tip: Press the "Route" button again to generate another random routes. 🐱‍👤
-    </div>
-</article>
-<!-- Add script to remove message when delete button is clicked -->
-<script> 
-document.addEventListener('DOMContentLoaded', () => {
-    (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
-      const $message = $delete.parentNode.parentNode;
-  
-      $delete.addEventListener('click', () => {
-        $message.parentNode.removeChild($message);
-      });
-    });
-  });
-</script>
-
-<p class="title">(Step 2) How long?</h2>
-
-
-{{except_html|safe}}
-<form class="box" id="form_time" action="/routegen/" method="POST"> {% csrf_token %}
-    <div class="field">
-        <label class="label" for="target_time">Target Time (mins):</label>
-        <div class="control">
-            <input class = "input"
-                onchange="check(this)"
-                type="number"
-                id="target_time"
-                name="target_time" 
-                min="0" 
-                max="120" 
-                step="1" 
-                value="10"
-                required>
-        </div>
-    </div>
-    <button class="button is-primary" id="abc" type="submit">Find a Route</button>
-    <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
-</form>
-
 {% endblock %}
 
 {% block scriptSetTargetTime %}
