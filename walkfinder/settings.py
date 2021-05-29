@@ -135,7 +135,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY','abc123')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['calm-falls-98051.herokuapp.com','127.0.0.1:8000']
+ALLOWED_HOSTS = ['calm-falls-98051.herokuapp.com','127.0.0.1','localhost']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
