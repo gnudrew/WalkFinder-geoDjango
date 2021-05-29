@@ -130,15 +130,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PRODUCTION CHECKLIST
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY','abc123')
+SECRET_KEY = os.environ.get('SECRET_KEY','abs0fd980w98utas98dfu09a8yser0c123')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['calm-falls-98051.herokuapp.com','127.0.0.1','localhost']
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
 
 # ~~~~~~~~~ DEVELOPMENT SPECIFIC CONFIG ~~~~~~~~~~
 # GDAL_LIBRARY_PATH = 'C:\OSGeo4W64\share\gdal'

@@ -1,18 +1,36 @@
 {% extends "base.html" %}
 
 {% block input %}
-<p>
-    Cool route.<br>
-    Let's go!
-</p>
-<h2>Your Route</h2>
+<article class="message is-info">
+    <div class="message-header">
+        <p>Time to walk</p>
+        <button class="delete is-medium" aria-label="delete"></button>
+    </div>
+    <div class="message-body">
+        Cool route. Let's go! 👞👟👞👟
+    </div>
+</article>
+<!-- Add script to remove message when delete button is clicked -->
+<script> 
+    document.addEventListener('DOMContentLoaded', () => {
+        (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
+          const $message = $delete.parentNode.parentNode;
+      
+          $delete.addEventListener('click', () => {
+            $message.parentNode.removeChild($message);
+          });
+        });
+      });
+    </script>
+
+<p class="title">Your Route</p>
 <!-- <p> SERVER: Details of chosen route...<br>
 Start Location is ({{lat}}, {{lon}}) in degrees.<br>
 Turnaround Location is ({{rand_lat}}, {{rand_lon}}) in degrees.<br>
 Target Time is {{target_time}} minutes.
 </p> -->
 <div>
-    <a href="/">Return to Homepage</a> 
+    <a class="button is-danger is-outlined" href="/">Return to Homepage</a> 
 </div>
 {% endblock %}
 
