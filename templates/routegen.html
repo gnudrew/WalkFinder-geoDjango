@@ -2,8 +2,15 @@
 {% load static %}
 
 
-{% block message %}
-{% if not is_POST_request %}
+<div id="timetravel" hidden>
+    <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up the Flux Capacitor..."/>
+</div> 
+{% endblock %}
+
+{% block input %}
+<!-- Render popup if it's not a POST request -->
+{% if is_POST_request == 0 %}
+<!-- info message popup -->
 <article class="message is-warning">
     <div class="message-header">
         <p>Not a bad spot</p>
@@ -13,7 +20,7 @@
         Great. Your embarkation location is locked and loaded. Now let's add an upper time limit for the round trip and start generating some routes. When you're satisfied, hit the "Next" button below to begin the walk. <br><br>Tip: Press the "Route" button again to generate another random routes. 🐱‍👤
     </div>
 </article>
-<!-- Add script to remove message when delete button is clicked -->
+<!-- script to remove info popup on delete button click -->
 <script> 
 document.addEventListener('DOMContentLoaded', () => {
     (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
@@ -26,10 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 </script>
 {% endif %}
-{% endblock %}
-
-{% block input %}
-<p class="title">(Step 2) How long?</h2>
 
 {{except_html|safe}}
 
@@ -49,19 +52,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 required>
         </div>
     </div>
-    <button class="button is-danger" id="abc" type="submit">Find a Route</button>
+    <input id="is_new_time" name="is_new_time" type="hidden" value="0">
+    <input id="is_first_request" name="is_first_request" type="hidden" value="1">
+    <button class="button is-primary" id="abc" type="submit">Find a Route</button>
     <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
 </form>
-{% endblock %}
-
-{% block loading %}
-<div id="loading" hidden>
-    <img id="loading-image" src="{% static 'routes/img/thinker.gif' %}" alt="Loading..." />
-</div>
-
-<div id="timetravel" hidden>
-    <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up the Flux Capacitor..."/>
-</div> 
+<!-- Handle is_first_request value -->
+{% if is_first_request == 0 %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("is_first_request").value = 0;
+    })
+</script>
+{% endif %}
 
 <script>
     // show loading gif while server processes request
@@ -88,6 +91,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // var time = document.getElementById("target_time");
     // time.value = {{target_time}};
     $("#target_time").val({{target_time}});
+
+    // add Event Listener for when the target_time input element value changes
+    document.addEventListener("DOMContentLoaded",  () => {
+        var el_target_time = document.getElementById("target_time");
+        el_target_time.addEventListener("change", () => {
+            // manage is_new_graph state
+            var el_is_new_time = document.getElementById("is_new_time");
+            {% if target_time|length %} //is the variable empty?
+            var t = "";
+            {% else %}
+            var t = {{target_time}};
+            {% endif %}
+            if (!t || el_target_time.value != t) {
+                // target_time is different than before
+                el_is_new_time.value = 1; // "True"
+            } else {
+                // target_time is same as before
+                el_is_new_time.value = 0; // "False
+            };
+        });
+    });
+
 
     // set custom validity for time < 0, and timetravel effect
     function check(input) {
