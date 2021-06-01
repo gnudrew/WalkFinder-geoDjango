@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 value="10"
                 required>
         </div>
+        <input id="is_new_time" type="hidden" value="False">
     </div>
     <button class="button is-primary" id="abc" type="submit">Find a Route</button>
     <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
@@ -84,6 +85,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // var time = document.getElementById("target_time");
     // time.value = {{target_time}};
     $("#target_time").val({{target_time}});
+
+    // add Event Listener for when the target_time input element value changes
+    document.addEventListener("DOMContentLoaded",  () => {
+        var el_target_time = document.getElementById("target_time");
+        el_target_time.addEventListener("change", () => {
+            // manage is_new_graph state
+            var el_is_new_time = document.getElementById("is_new_time");
+            if (el_target_time.value != {{target_time}}) {
+                el_is_new_time.value = "True";
+            } else {
+                el_is_new_time.value = "False";
+            };
+        });
+    });
+
 
     // set custom validity for time < 0, and timetravel effect
     function check(input) {
