@@ -6,9 +6,7 @@ from django.contrib.gis.geos import Point
 from random import random as r # interval r() -> x in [0,1)
 import osmnx as ox
 from networkx import NetworkXPointlessConcept
-from networkx.readwrite import json_graph
-graph_write = json_graph.adjacency_data
-graph_read = json_graph.adjacency_graph
+from osmnx.io import load_graphml, save_graphml
 
 
 # Create your views here.
@@ -57,6 +55,7 @@ def routegen_view(request):
     if request.method=='POST':
         # get form input
         target_time = int(request.POST.get('target_time'))
+        is_new_time = bool(request.POST.get('is_new_time'))
         # print("~=~== FRESH AFTER POST: time TYPE is...", type(target_time))
 
         # store this to session
@@ -66,49 +65,56 @@ def routegen_view(request):
         lat = float(request.session['lat'])
         lon = float(request.session['lon'])
         
-        # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
-        speed_meters_per_min = 3*(1609.)/60
-        distance = speed_meters_per_min * target_time
-    
-        try: # got ValueError "found no graph nodes within the requested polygon"
-            G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
-        except (ValueError, NetworkXPointlessConcept) as err:
-            print("EXCEPTED:", type(err), "; MESSAGE:", err)
-            # rebuild map
-            m = buildmap_start(lat, lon)
-            # Build error html
-            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p></div>"
-            return render(request, "routegen.html", 
-            {
-                'folium_map':m._repr_html_(), 
-                'except_html':except_html,
-                'target_time':target_time, 
-                # 'number_of_nodes':number_of_nodes,
-                # 'rand_lat':rand_lat,
-                # 'rand_lon':rand_lon,                
-            })
-        except:
-            print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
-                        
-            # rebuild map
-            m = buildmap_start(lat, lon)
-            # exception html
-            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
+        # Generate new graph if time changed, else load previous graph from memory
+        if is_new_time:
+            # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
+            speed_meters_per_min = 3*(1609.)/60
+            distance = speed_meters_per_min * target_time
+        
+            try: # got ValueError "found no graph nodes within the requested polygon"
+                G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
+            except (ValueError, NetworkXPointlessConcept) as err:
+                print("EXCEPTED:", type(err), "; MESSAGE:", err)
+                # rebuild map
+                m = buildmap_start(lat, lon)
+                # Build error html
+                except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p></div>"
+                return render(request, "routegen.html", 
+                {
+                    'is_POST_request':True,
+                    'folium_map':m._repr_html_(), 
+                    'except_html':except_html,
+                    'target_time':target_time, 
+                    # 'number_of_nodes':number_of_nodes,
+                    # 'rand_lat':rand_lat,
+                    # 'rand_lon':rand_lon,                
+                })
+            except:
+                print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
+                            
+                # rebuild map
+                m = buildmap_start(lat, lon)
+                # exception html
+                except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
 
-            return render(request, "routegen.html", 
-            {
-                'folium_map':m._repr_html_(), 
-                'except_html':except_html,
-                'target_time':target_time, 
-                # 'number_of_nodes':number_of_nodes,
-                # 'rand_lat':rand_lat,
-                # 'rand_lon':rand_lon,                
-            })            
+                return render(request, "routegen.html", 
+                {
+                    'is_POST_request':True,
+                    'folium_map':m._repr_html_(), 
+                    'except_html':except_html,
+                    'target_time':target_time, 
+                    # 'number_of_nodes':number_of_nodes,
+                    # 'rand_lat':rand_lat,
+                    # 'rand_lon':rand_lon,                
+                })            
 
-        # store G to session
-        # request.session['G'] = graph_write(G)
-          ## Currently cannot write graphs because type <'Linestring'> is not JSON serializable...
+            # store G to file
+            save_graphml(G, filepath="data/G")
+        else:
+            # load previous graph
+            G = load_graphml(filepath="data/G")
 
+        ## Calculate a Random Route
         # get node id's from G
         node_ids = [node for node in G.nodes]
         # randomly choose a node
