@@ -9,22 +9,10 @@
 <div id="timetravel" hidden>
     <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up the Flux Capacitor..."/>
 </div> 
-
-<script>
-    // show loading gif while server processes request
-    // $(window).on('beforeunload pagehide', () => {
-    //     $('#loading').show();
-    // });
-
-    // document.addEventListener("DOMContentLoaded", () => {
-    //     document.getElementById("form").addEventListener('submit', () => {
-    //         document.getElementById("loading").removeAttribute("hidden");
-    //     })
-    // });
-</script>
 {% endblock %}
 
 {% block input %}
+<!-- info message popup -->
 <article class="message is-warning">
     <div class="message-header">
         <p>Not a bad spot</p>
@@ -34,7 +22,7 @@
         Great. Your embarcation location is locked and loaded. Now let's add an upper time limit for the round trip and start generating some routes. When you're satisfied with a route, hit the "Next" button below to begin the walk. <br><br>Tip: Press the "Route" button again to generate another random routes. 🐱‍👤
     </div>
 </article>
-<!-- Add script to remove message when delete button is clicked -->
+<!-- script to remove info popup on delete button click -->
 <script> 
 document.addEventListener('DOMContentLoaded', () => {
     (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
@@ -66,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 value="10"
                 required>
         </div>
-        <input id="is_new_time" type="hidden" value="False">
     </div>
+    <input id="is_new_time" name="is_new_time" type="hidden" value="0">
     <button class="button is-primary" id="abc" type="submit">Find a Route</button>
     <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
 </form>
@@ -92,10 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
         el_target_time.addEventListener("change", () => {
             // manage is_new_graph state
             var el_is_new_time = document.getElementById("is_new_time");
-            if (el_target_time.value != {{target_time}}) {
-                el_is_new_time.value = "True";
+            {% if target_time|length %} //is the variable empty?
+            var t = "";
+            {% else %}
+            var t = {{target_time}};
+            {% endif %}
+            if (!t || el_target_time.value != t) {
+                // target_time is different than before
+                el_is_new_time.value = 1; // "True"
             } else {
-                el_is_new_time.value = "False";
+                // target_time is same as before
+                el_is_new_time.value = 0; // "False
             };
         });
     });

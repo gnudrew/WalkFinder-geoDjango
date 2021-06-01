@@ -1,3 +1,6 @@
+from django.conf import settings
+import os
+
 from django.shortcuts import render, redirect
 from .models import Mapgens
 from .buildmap import buildmap_start, buildmap_route
@@ -22,9 +25,9 @@ def mapgen_view(request):
         request.session['lat'] = lat
         request.session['lon'] = lon
         # server-side print
-        print('======== mapgen_view ========')
-        print("(lat,lon) = ",str((lat,lon)))
-        print('====== END mapgen_view ======')
+        # print('======== mapgen_view ========')
+        # print("(lat,lon) = ",str((lat,lon)))
+        # print('====== END mapgen_view ======')
         # build map
         m = buildmap_start(lat, lon)
 
@@ -55,7 +58,10 @@ def routegen_view(request):
     if request.method=='POST':
         # get form input
         target_time = int(request.POST.get('target_time'))
-        is_new_time = bool(request.POST.get('is_new_time'))
+        print("raw POST is_new:",request.POST.get('is_new_time'),"type:",type(request.POST.get('is_new_time')))
+        is_new_time = int(request.POST.get('is_new_time')) #1=True,0=False
+        print("tt:",target_time,";convert bool is_new):",is_new_time)
+
         # print("~=~== FRESH AFTER POST: time TYPE is...", type(target_time))
 
         # store this to session
@@ -65,12 +71,16 @@ def routegen_view(request):
         lat = float(request.session['lat'])
         lon = float(request.session['lon'])
         
-        # Generate new graph if time changed, else load previous graph from memory
+        ## Generate new graph if time changed, else load previous graph from memory
+        # path to file
+        base_dir = settings.BASE_DIR
+        save_dir = os.path.join(base_dir, "data")
+        file_path = os.path.join(save_dir, "G.graphml") # use 1 file for PoC
+        # constants
+        speed_meters_per_min = 3*(1609.)/60
+        distance = speed_meters_per_min * target_time
         if is_new_time:
             # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
-            speed_meters_per_min = 3*(1609.)/60
-            distance = speed_meters_per_min * target_time
-        
             try: # got ValueError "found no graph nodes within the requested polygon"
                 G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
             except (ValueError, NetworkXPointlessConcept) as err:
@@ -109,10 +119,10 @@ def routegen_view(request):
                 })            
 
             # store G to file
-            save_graphml(G, filepath="data/G")
+            save_graphml(G, filepath=file_path)
         else:
             # load previous graph
-            G = load_graphml(filepath="data/G")
+            G = load_graphml(filepath=file_path)
 
         ## Calculate a Random Route
         # get node id's from G
