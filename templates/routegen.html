@@ -12,6 +12,8 @@
 {% endblock %}
 
 {% block input %}
+<!-- Render popup if it's not a POST request -->
+{% if is_POST_request == 0 %}
 <!-- info message popup -->
 <article class="message is-warning">
     <div class="message-header">
@@ -34,9 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 </script>
-
-<p class="title">(Step 2) How long?</h2>
-
+{% endif %}
 
 {{except_html|safe}}
 <form class="box" id="form_time" action="/routegen/" method="POST"> {% csrf_token %}
@@ -56,9 +56,18 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </div>
     <input id="is_new_time" name="is_new_time" type="hidden" value="0">
+    <input id="is_first_request" name="is_first_request" type="hidden" value="1">
     <button class="button is-primary" id="abc" type="submit">Find a Route</button>
     <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
 </form>
+<!-- Handle is_first_request value -->
+{% if is_first_request == 0 %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("is_first_request").value = 0;
+    })
+</script>
+{% endif %}
 
 {% endblock %}
 
