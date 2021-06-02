@@ -1,6 +1,3 @@
-from django.conf import settings
-import os
-
 from django.shortcuts import render, redirect
 from .models import Mapgens
 from .buildmap import buildmap_start, buildmap_route
@@ -9,15 +6,14 @@ from django.contrib.gis.geos import Point
 from random import random as r # interval r() -> x in [0,1)
 import osmnx as ox
 from networkx import NetworkXPointlessConcept
-from osmnx.io import load_graphml, save_graphml
+from networkx.readwrite import json_graph
+graph_write = json_graph.adjacency_data
+graph_read = json_graph.adjacency_graph
 
 
 # Create your views here.
 def home_view(request):
-    context = {
-        'is_POST_request':0,
-    }
-    return render(request, "base.html", context)
+    return render(request, "base.html", {})
 
 def mapgen_view(request):
     if request.method=='POST':
@@ -28,26 +24,22 @@ def mapgen_view(request):
         request.session['lat'] = lat
         request.session['lon'] = lon
         # server-side print
-        # print('======== mapgen_view ========')
-        # print("(lat,lon) = ",str((lat,lon)))
-        # print('====== END mapgen_view ======')
+        print('======== mapgen_view ========')
+        print("(lat,lon) = ",str((lat,lon)))
+        print('====== END mapgen_view ======')
         # build map
         m = buildmap_start(lat, lon)
 
-        context = {
-            'is_POST_request':1,
-            'lat':lat, 
-            'lon':lon, 
-            'folium_map':m._repr_html_(),            
-        }
-        return render(request, "mapgen.html", context)
+        return render(request, "mapgen.html", 
+            {
+                'lat':lat, 
+                'lon':lon, 
+                'folium_map':m._repr_html_(),
+            })
     
     if request.method=='GET':
         # Change this to URL routing: If user submits GET request manually at URL `/mapgen/` redirect to URL `/`.
-        context = {
-            'is_POST_request':0,
-        }
-        return render(request,"base.html",context)
+        return render(request,"base.html")
 
 def routegen_view(request):
     if request.method=='GET':
@@ -57,20 +49,16 @@ def routegen_view(request):
         # rebuild map
         m = buildmap_start(lat,lon)
 
-        context = {
+        return render(request, "routegen.html", 
+        {
             'folium_map':m._repr_html_(),
-            'is_POST_request':0
-        }
-        return render(request, "routegen.html", context)
+            'is_POST_request':False,
+        })
 
     if request.method=='POST':
-        print("Retrieving Stuf...")
-        ## Retrieve form input
+        # get form input
         target_time = int(request.POST.get('target_time'))
-        # print("raw POST is_new:",request.POST.get('is_new_time'),"type:",type(request.POST.get('is_new_time')))
-        is_new_time = int(request.POST.get('is_new_time')) #1=True,0=False
-        # print("tt:",target_time,";convert bool is_new):",is_new_time)
-        is_first_request = int(request.POST.get('is_first_request'))
+        # print("~=~== FRESH AFTER POST: time TYPE is...", type(target_time))
 
         # store this to session
         request.session['target_time'] = target_time
@@ -79,56 +67,51 @@ def routegen_view(request):
         lat = float(request.session['lat'])
         lon = float(request.session['lon'])
         
-        ## Generate new graph if time changed, else load previous graph from memory
-        # path to file
-        base_dir = settings.BASE_DIR
-        save_dir = os.path.join(base_dir, "data")
-        file_path = os.path.join(save_dir, "G.graphml") # use 1 file for PoC
-        # constants
+        # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
         speed_meters_per_min = 3*(1609.)/60
         distance = speed_meters_per_min * target_time
+    
+        try: # got ValueError "found no graph nodes within the requested polygon"
+            G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
+        except (ValueError, NetworkXPointlessConcept) as err:
+            print("EXCEPTED:", type(err), "; MESSAGE:", err)
+            # rebuild map
+            m = buildmap_start(lat, lon)
+            # Build error html
+            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p></div>"
+            return render(request, "routegen.html", 
+            {
+                'is_POST_request':True,
+                'folium_map':m._repr_html_(), 
+                'except_html':except_html,
+                'target_time':target_time, 
+                # 'number_of_nodes':number_of_nodes,
+                # 'rand_lat':rand_lat,
+                # 'rand_lon':rand_lon,                
+            })
+        except:
+            print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
+                        
+            # rebuild map
+            m = buildmap_start(lat, lon)
+            # exception html
+            except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
 
-        if is_new_time or is_first_request:
-            # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
-            is_first_request = 0
-            context = {
-                    'is_first_request':0,
-                    'is_POST_request':1,
-                    'target_time':target_time,              
-            }
-            print("Querying OSM API for new Graph...")
-            try: # got ValueError "found no graph nodes within the requested polygon"
-                G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
-            except (ValueError, NetworkXPointlessConcept) as err:
-                print("EXCEPTED:", type(err), "; MESSAGE:", err)
-                # rebuild map
-                m = buildmap_start(lat, lon)
-                # Build error html
-                except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p></div>"
-                context['except_html'] = except_html
-                context['folium_map'] = m._repr_html_()
-                return render(request, "routegen.html", context)
-            except:
-                print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
-                            
-                # rebuild map
-                m = buildmap_start(lat, lon)
-                # exception html
-                except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
-                context['except_html'] = except_html
-                context['folium_map'] = m._repr_html_()
-                return render(request, "routegen.html", context)
+            return render(request, "routegen.html", 
+            {
+                'is_POST_request':True,
+                'folium_map':m._repr_html_(), 
+                'except_html':except_html,
+                'target_time':target_time, 
+                # 'number_of_nodes':number_of_nodes,
+                # 'rand_lat':rand_lat,
+                # 'rand_lon':rand_lon,                
+            })            
 
-            # store G to file
-            print("Saving Graph to memory...")
-            save_graphml(G, filepath=file_path)
-        else:
-            # load previous graph
-            print("Loading Graph from memory...")
-            G = load_graphml(filepath=file_path)
+        # store G to session
+        # request.session['G'] = graph_write(G)
+          ## Currently cannot write graphs because type <'Linestring'> is not JSON serializable...
 
-        ## Calculate a Random Route
-        print("Calculating a random route...")
         # get node id's from G
         node_ids = [node for node in G.nodes]
         # randomly choose a node
@@ -150,7 +133,6 @@ def routegen_view(request):
         route = ox.distance.shortest_path(G, nn, node_ids[chosen_one])
 
         # build map from these inputs
-        print("Building a new Map...")
         m = buildmap_start(lat, lon)
         try: # got ValueError : "graph contains no edges"
             m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
@@ -191,7 +173,6 @@ def routegen_view(request):
             })
 
         # Save inputs to db
-        print("Saving inputs to db:Mapgens...")
         Mapgens.objects.create(
             home_loc = Point(y=lat,x=lon),
             start_loc = Point(y=nn_lat,x=nn_lon),
@@ -203,17 +184,16 @@ def routegen_view(request):
             dist_type = "network",
             network_type = "walk",
         )
-        print("Rendering new page...")
 
-        context = {
-            'is_first_request':0,
+        return render(request, "routegen.html", 
+        {
+            'is_POST_request':True,
             'target_time':target_time, 
             'folium_map':m._repr_html_(), 
             'number_of_nodes':number_of_nodes,
             'rand_lat':rand_lat,
-            'rand_lon':rand_lon,            
-        }
-        return render(request, "routegen.html", context)
+            'rand_lon':rand_lon,
+        })
 
 def walk_view(request):
     # retrieve map inputs from session

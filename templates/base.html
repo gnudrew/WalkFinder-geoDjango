@@ -33,8 +33,7 @@
     {% block loading %}
     {% endblock %}
 
-    {% block input %}
-    {% if is_POST_request == 0 %}
+    {% block message %}
     <article class="message is-warning">
         <div class="message-header">
             <p>Howdy</p>
@@ -55,8 +54,12 @@
           });
         });
       });
-    </script>    
-    {% endif %}
+    </script>
+    {% endblock %}
+    
+    {% block input %}
+    <p class="title">(Step 1) From Where?</h2>
+    
 
     <script>
         // Standard Geolocation API call
