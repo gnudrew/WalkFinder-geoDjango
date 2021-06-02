@@ -64,18 +64,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 {% block scriptSetTargetTime %}
 <script>
-    // show loading gif after form submit while server processes request
-    document.getElementById("form_time").addEventListener('submit', () => {
-        document.getElementById("loading").removeAttribute("hidden");
-    });
-
-    // persist form value from previous submission
-    // var time = document.getElementById("target_time");
-    // time.value = {{target_time}};
-    $("#target_time").val({{target_time}});
-
-    // add Event Listener for when the target_time input element value changes
     document.addEventListener("DOMContentLoaded",  () => {
+    
+        // show loading gif after form submit while server processes request
+        document.getElementById("form_time").addEventListener('submit', () => {
+            document.getElementById("loading").removeAttribute("hidden");
+        });
+
+        // persist form value from previous submission
+        // var time = document.getElementById("target_time");
+        // time.value = {{target_time}};
+        $("#target_time").val({{target_time}});
+
+        // Listen for target_time input field change
         var el_target_time = document.getElementById("target_time");
         el_target_time.addEventListener("change", () => {
             // manage is_new_graph state
@@ -93,26 +94,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 el_is_new_time.value = 0; // "False
             };
         });
-    });
-
-
-    // set custom validity for time < 0, and timetravel effect
-    function check(input) {
-        if (input.validity.rangeUnderflow) {
-            input.setCustomValidity("Time travel is currently in Beta. Please stick with entropic time for now.");
-            $('#timetravel').show();
-            // document.getElementById("timetravel").style.display = "flex";
-            setTimeout(() => {
-                // document.getElementById("timetravel").style.display = "none";
-                $('#timetravel').hide();
-            }, 4000);
-        } else if (input.validity.rangeOverflow) {
-            input.setCustomValidity("Please enter a smaller number.")
-        } else {
-            input.setCustomValidity("");
+    
+        // set custom validity for time < 0, and timetravel effect
+        function check(input) {
+            if (input.validity.rangeUnderflow) {
+                input.setCustomValidity("Time travel is currently in Beta. Please stick with entropic time for now.");
+                $('#timetravel').show();
+                // document.getElementById("timetravel").style.display = "flex";
+                setTimeout(() => {
+                    // document.getElementById("timetravel").style.display = "none";
+                    $('#timetravel').hide();
+                }, 4000);
+            } else if (input.validity.rangeOverflow) {
+                input.setCustomValidity("Please enter a smaller number.")
+            } else {
+                input.setCustomValidity("");
+            }
         }
-    }
-
+    });
     // time.addEventListener("change", check(time) );
 
 </script>
