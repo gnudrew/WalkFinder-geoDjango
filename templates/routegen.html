@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // show loading gif after form submit while server processes request
         document.getElementById("form_time").addEventListener('submit', () => {
-            document.getElementById("loading").removeAttribute("hidden");
+            document.getElementById("loading").classList.remove("is-hidden");
         });
 
         // persist form value from previous submission
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 {% endblock %}
 
 {% block loading %}
-<div id="loading" hidden>
+<div id="loading" class="is-hidden">
     <img id="loading-image" src="{% static 'routes/img/thinker.gif' %}" alt="Loading..." />
 </div>
 
