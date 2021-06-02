@@ -72,9 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // persist form value from previous submission
-        // var time = document.getElementById("target_time");
-        // time.value = {{target_time}};
-        $("#target_time").val({{target_time}});
+        document.getElementById("target_time").value = {{target_time}};
 
         // Listen for target_time input field change
         var el_target_time = document.getElementById("target_time");
