@@ -74,6 +74,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // persist form value from previous submission
         document.getElementById("target_time").value = {{target_time}};
 
+        // set custom validity when time < 0, unhide timetravel effect
+        function check(input) {
+            if (input.validity.rangeUnderflow) {
+                input.setCustomValidity("Time travel is in Beta. Please use entropic time for now.");
+                document.getElementById("timetravel").classList.remove("is-hidden");
+                setTimeout(() => {
+                    document.getElementById("timetravel").classList.add("is-hidden");
+                }, 4000);
+            } else if (input.validity.rangeOverflow) {
+                input.setCustomValidity("Please enter a smaller number.");
+            } else {
+                input.setCustomValidity("");
+            }
+        };
+
         // Listen for target_time input field change
         var el_target_time = document.getElementById("target_time");
         el_target_time.addEventListener("change", () => {
@@ -91,27 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // target_time is same as before
                 el_is_new_time.value = 0; // "False
             };
+            // check for custom validity update
+            check(el_target_time);
         });
     
-        // set custom validity for time < 0, and timetravel effect
-        function check(input) {
-            if (input.validity.rangeUnderflow) {
-                input.setCustomValidity("Time travel is currently in Beta. Please stick with entropic time for now.");
-                $('#timetravel').show();
-                // document.getElementById("timetravel").style.display = "flex";
-                setTimeout(() => {
-                    // document.getElementById("timetravel").style.display = "none";
-                    $('#timetravel').hide();
-                }, 4000);
-            } else if (input.validity.rangeOverflow) {
-                input.setCustomValidity("Please enter a smaller number.")
-            } else {
-                input.setCustomValidity("");
-            }
-        }
     });
-    // time.addEventListener("change", check(time) );
-
 </script>
 {% endblock %}
 
@@ -120,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <img id="loading-image" src="{% static 'routes/img/thinker.gif' %}" alt="Loading..." />
 </div>
 
-<div id="timetravel" hidden>
+<div id="timetravel" class="is-hidden">
     <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up the Flux Capacitor..."/>
 </div> 
 {% endblock %}
