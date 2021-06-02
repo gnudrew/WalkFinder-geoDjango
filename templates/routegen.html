@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block loading %}
-<div id="loading" hidden>
-    <img id="loading-image" src="{% static 'routes/img/thinker.gif' %}" alt="Loading..." />
-</div>
-
-<div id="timetravel" hidden>
-    <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up the Flux Capacitor..."/>
-</div> 
-{% endblock %}
-
 {% block input %}
 <!-- Render popup if it's not a POST request -->
 {% if is_POST_request == 0 %}
@@ -126,6 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // time.addEventListener("change", check(time) );
 
 </script>
+{% endblock %}
+
+{% block loading %}
+<div id="loading" hidden>
+    <img id="loading-image" src="{% static 'routes/img/thinker.gif' %}" alt="Loading..." />
+</div>
+
+<div id="timetravel" hidden>
+    <img id="timetravel-image" src="{% static 'routes/img/delorean.gif' %}" alt="Firing up the Flux Capacitor..."/>
+</div> 
 {% endblock %}
 
 {% block map %}

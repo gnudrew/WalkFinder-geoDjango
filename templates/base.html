@@ -30,9 +30,6 @@
         
     </section>
     
-    {% block loading %}
-    {% endblock %}
-
     {% block input %}
     {% if is_POST_request == 0 %}
     <article class="message is-warning">
@@ -131,6 +128,8 @@
 
     {% block scriptSetLatLon %}{% endblock %}
     {% block scriptSetTargetTime %}{% endblock %}
+    
+    {% block loading %}{% endblock %}
 
     <div>
         <div id="map">
