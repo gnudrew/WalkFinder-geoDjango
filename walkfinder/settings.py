@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+    # 'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,14 +71,13 @@ WSGI_APPLICATION = 'walkfinder.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-         'NAME': 'postgres',
-         'USER': 'postgres',
-         'PASSWORD': 'atlantis', # JG: Load password from ENV var. Key:Val syntax.
-         # look for python module in PyPI (dotenv)
-    },
+    'default':{}
 }
+# Heroku: Load database config from $DATABASE_URL env variable
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -122,22 +123,76 @@ STATICFILES_DIRS = [
     "root_staticfiles", # this syntax is a relative path by omitting the leading '/'
 ]
 
+# The absolute path to the directory from which Whitenoise will serve all files at '/'
+# E.g. 'favicon.ico'
+WHITENOISE_ROOT = os.path.join(STATIC_ROOT, 'root')
+# See: https://stackoverflow.com/questions/65927187/how-to-server-favicon-ico-with-django-and-whitenoise
+
+# Simplified static file serving.
+# https://pypi.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# GDAL_LIBRARY_PATH = 'C:\OSGeo4W64\share\gdal'
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PRODUCTION CHECKLIST
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY','abs0fd980w98utas98dfu09a8yser0c123')
+SECRET_KEY = os.environ.get('SECRET_KEY','abc123')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['calm-falls-98051.herokuapp.com','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['calm-falls-98051.herokuapp.com','127.0.0.1:8000']
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
-# ~~~~~~~~~ DEVELOPMENT SPECIFIC CONFIG ~~~~~~~~~~
-# GDAL_LIBRARY_PATH = 'C:\OSGeo4W64\share\gdal'
 
-# ~~~~~~~~~ END DEV CONFIG ~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Configure level of detail in Heroku Server LOGs
+# See: https://stackoverflow.com/questions/51466192/server-error-500-django-deployment-on-heroku
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': ('%(asctime)s [%(process)d] [%(levelname)s] '
+                       'pathname=%(pathname)s lineno=%(lineno)s '
+                       'funcname=%(funcName)s %(message)s'),
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        }
+    },
+    'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
