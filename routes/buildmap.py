@@ -28,9 +28,9 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
     # set rezzom box for map after adding new marker
     # rezoom_box = [(start_loc[0]-.0025, start_loc[1]-.005), (start_loc[0]+.0025, start_loc[1]+.005)] # bounding box specified by two points: [southwest, northeast]
 
-    print('======== buildmap_route() ========')
-    print('start_loc is: ',start_loc)
-    print('rand_loc is: ',end_loc)
+    # print('======== buildmap_route() ========')
+    # print('start_loc is: ',start_loc)
+    # print('rand_loc is: ',end_loc)
 
     # add marker at rand_loc
     folium.Marker(
@@ -38,7 +38,7 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
         # colors:
         # purply-blue: #715EC1
 
-        icon=folium.Icon(color='', icon='reply', prefix='fa'),
+        icon=folium.Icon(color='red', icon='reply', prefix='fa'),
         tooltip='click here for detail',
         popup='Target time is '+str(target_time)+' min.',
     ).add_to(m)
