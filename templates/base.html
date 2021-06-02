@@ -43,51 +43,57 @@
     </article>
     <!-- Add script to remove message when delete button is clicked -->
     <script> 
-    document.addEventListener('DOMContentLoaded', () => {
-        (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
-          const $message = $delete.parentNode.parentNode;
-      
-          $delete.addEventListener('click', () => {
-            $message.parentNode.removeChild($message);
-          });
+        document.addEventListener('DOMContentLoaded', () => {
+            (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
+                const $message = $delete.parentNode.parentNode;
+                $delete.addEventListener('click', () => {
+                    $message.parentNode.removeChild($message);
+                });
+            });
         });
-      });
     </script>    
     {% endif %}
 
     <script>
         // Standard Geolocation API call
         // Put lat, lon in form input elements
-        function getLocation() {     
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else { 
-                document.getElementById("no-geo").innerHTML = 
-                "GeoLocation is not supported by this browser.";
+        document.addEventListener('DOMContentLoaded', () => {
+            function getLocation() {     
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                } else { 
+                    document.getElementById("no-geo").innerHTML = 
+                    "GeoLocation is not supported by this browser.";
+                }
             }
-        }
-        function showPosition(position) {
-            $("#lat").val(position.coords.latitude.toFixed(5)); 
-            $("#lon").val(position.coords.longitude.toFixed(5));
-            // submit form
-            document.forms["mapgen"].submit()
-        
-        }
-        // toggle input form for coordinates
-        function showMapgenForm() {
-            var flist = document.forms["mapgen"].classList;
-            if (flist.contains("is-hidden")) {
-                flist.remove("is-hidden")
-            } else {
-                flist.add("is-hidden")
+            function showPosition(position) {
+                document.getElementById("lat").value = position.coords.latitude.toFixed(5);
+                // $("#lat").val(position.coords.latitude.toFixed(5)); 
+                document.getElementById("lon").value = position.coords.longitude.toFixed(5);
+                // $("#lon").val(position.coords.longitude.toFixed(5));
+                // submit form
+                document.forms["mapgen"].submit()
             }
-            
-        }
+            // toggle input form for coordinates
+            function showMapgenForm() {
+                var flist = document.forms["mapgen"].classList;
+                if (flist.contains("is-hidden")) {
+                    flist.remove("is-hidden")
+                } else {
+                    flist.add("is-hidden")
+                }
+            }
+            // Listen for button clicks
+            document.getElementById("btn_gps").addEventListener("click", getLocation);
+            document.getElementById("btn_toggle").addEventListener("click", showMapgenForm);
+        });
+
+
     </script>
 
     <p id="no-geo" hidden>Geolocation not available.</p>
-    <button class="button is-danger" onclick="getLocation()">Get My GPS Location</button>
-    <button class="button is-info" onclick="showMapgenForm()">Toggle Manual Input</button>
+    <button id="btn_gps" class="button is-danger">Get My GPS Location</button>
+    <button id="btn_toggle" class="button is-info">Toggle Manual Input</button>
     <a class="button is-danger is-outlined" href="/routegen/">NEXT: Generate Routes</a>
     <br>
 
