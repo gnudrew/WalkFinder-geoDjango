@@ -3,3 +3,4 @@ cache/
 walkfinder/routes/__pycache__/views.cpython-39.pyc
 walkfinder/walkfinder/__pycache__/settings.cpython-39.pyc
 data/G.graphml
+data/G.graphml
