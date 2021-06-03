@@ -25,25 +25,38 @@
 {{except_html|safe}}
 
 <form class="box" id="form_time" action="/routegen/" method="POST"> {% csrf_token %}
-    <div class="field">
-        <label class="label" for="target_time">Target Time (mins):</label>
-        <div class="control">
-            <input class = "input"
-                onchange="check(this)"
-                type="number"
-                id="target_time"
-                name="target_time" 
-                min="0" 
-                max="120" 
-                step="1" 
-                required
-                autofocus>
+    <div class="columns">
+        <div class="column is-narrow">
+            <div class="field">
+                <label class="label" for="target_time">Target Time (mins):</label>
+                <div class="control">
+                    <input class = "input"
+                        onchange="check(this)"
+                        type="number"
+                        id="target_time"
+                        name="target_time" 
+                        min="0" 
+                        max="120" 
+                        step="1" 
+                        required
+                        autofocus>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="column is-narrow">
+            <div class="columns">
+                <div class="column is-narrow">
+                    <button class="button is-primary" id="abc" type="submit">Find a Route</button>
+                </div>
+                <div class="column is-narrow">
+                    <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
+                </div>                    
+            </div>
+        </div>
+    
+    </div>  
     <input id="is_new_time" name="is_new_time" type="hidden" value="0">
     <input id="is_first_request" name="is_first_request" type="hidden" value="1">
-    <button class="button is-primary" id="abc" type="submit">Find a Route</button>
-    <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
 </form>
 <!-- Handle is_first_request value -->
 {% if is_first_request == 0 %}
