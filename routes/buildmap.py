@@ -12,7 +12,7 @@ def buildmap_start(lat, lon):
     m = folium.Map(
         location=start_loc, 
         zoom_start=16,
-        tiles="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
+        # tiles="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
         attr=attribution,
         max_zoom=20,
     )
