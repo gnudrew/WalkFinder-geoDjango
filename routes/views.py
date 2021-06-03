@@ -54,12 +54,14 @@ def routegen_view(request):
         # retrieve session inputs, or default if first call
         lat = request.session.get('lat', 44.78488)
         lon = request.session.get('lon', -93.14365)
+        target_time = request.session.get('target_time',10)
         # rebuild map
         m = buildmap_start(lat,lon)
 
         context = {
             'folium_map':m._repr_html_(),
-            'is_POST_request':0
+            'is_POST_request':0,
+            'target_time':target_time,
         }
         return render(request, "routegen.html", context)
 

@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 min="0" 
                 max="120" 
                 step="1" 
-                value="10"
                 required>
         </div>
     </div>
@@ -94,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         el_target_time.addEventListener("change", () => {
             // manage is_new_graph state
             var el_is_new_time = document.getElementById("is_new_time");
-            {% if target_time|length %} //is the variable empty?
+            {% if target_time|length %} //is the context variable empty?
             var t = "";
             {% else %}
             var t = {{target_time}};
