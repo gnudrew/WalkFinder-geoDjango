@@ -1,18 +1,37 @@
 import folium
 import osmnx as ox
+import branca
 
 def buildmap_start(lat, lon):
     start_loc=(lat,lon)
-    m = folium.Map(location=start_loc, zoom_start=16)
+    attribution = """
+        Map data from &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>,
+        &copy; <a href="https://stadiamaps.com/">Stadia Maps</a>,   
+        &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> 
+    """
+    m = folium.Map(
+        location=start_loc, 
+        zoom_start=16,
+        tiles="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
+        attr=attribution,
+        max_zoom=20,
+    )
 
+    popup_html = f"""
+        <h3 class="is-title is-small">Home at:</h3>
+        <p class="is-subtitle is-small">
+        Lat: {lat}<br>
+        Lon: {lon}
+        </p>
+    """
+    popup_iframe = branca.element.IFrame(html=popup_html,width=200,height=120)
+    popup = folium.Popup(popup_iframe, max_width=200)
     folium.Marker(
         start_loc, 
         icon=folium.Icon(color='red', icon='home', prefix='fa'), 
-        tooltip='click here for detail', 
-        popup='Homebase at '+str(start_loc), 
+        tooltip='clickable', 
+        popup=popup, 
     ).add_to(m)
-
-    folium.TileLayer('Stamen Terrain').add_to(m)
 
     return m
 
@@ -39,8 +58,8 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
         # purply-blue: #715EC1
 
         icon=folium.Icon(color='red', icon='reply', prefix='fa'),
-        tooltip='click here for detail',
-        popup='Target time is '+str(target_time)+' min.',
+        tooltip='clickable',
+        popup='Turnback @',
     ).add_to(m)
 
     # m.fit_bounds(rezoom_box)
