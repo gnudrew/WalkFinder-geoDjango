@@ -19,13 +19,13 @@ def buildmap_start(lat, lon):
 
     popup_html = f"""
         <h3 class="is-title is-small">Home at:</h3>
-        <p class="is-subtitle is-small">
-        Lat: {lat}<br>
-        Lon: {lon}
+        <p class="">
+        Lat: <span class="tag">{lat}</span><br>
+        Lon: <span class="tag">{lon}</span>
         </p>
     """
-    popup_iframe = branca.element.IFrame(html=popup_html,width=200,height=120)
-    popup = folium.Popup(popup_iframe, max_width=200)
+    popup_iframe = branca.element.IFrame(html=popup_html,width=180,height=108)
+    popup = folium.Popup(popup_iframe, max_width=180)
     folium.Marker(
         start_loc, 
         icon=folium.Icon(color='red', icon='home', prefix='fa'), 

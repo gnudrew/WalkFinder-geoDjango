@@ -137,12 +137,19 @@
     
     {% block loading %}{% endblock %}
 
-    <div>
-        <div id="map">
+    
+    <div class="box" id="map">
         {% block map %}{% endblock %}
-        </div>
     </div>
     
+    <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+        <ul>
+            <li class="is-active"><a href="#">Here</a></li>
+            <li><a href="#">are</a></li>
+            <li><a href="#">some</a></li>
+            <li><a href="#">breadcrumbs</a></li>
+        </ul>
+    </nav>
 
 </body>
 </html>
