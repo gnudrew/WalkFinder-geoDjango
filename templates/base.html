@@ -32,9 +32,10 @@
     
     <!-- <div class="columns">
         <div class="column is-8"> -->
-    <section class="section">
+    
     {% block message %}
     {% if is_POST_request == 0 %}
+        <section class="section">
             <article class="message is-warning">
                 <div class="message-header">
                     <p>Howdy</p>
@@ -44,12 +45,12 @@
                     Looking for some novelty on your daily walk? Aiming for a longer wander? Either way, you've come to the right place. Let's start with your current location. 🌎
                 </div>
             </article>
+        </section>
     {% endif %}
     {% endblock %}
-    </section>
+    
         <!-- </div>
     </div> -->
-
 
     <!-- Add script to remove messages when delete button is clicked -->
     <script> 
@@ -166,7 +167,7 @@
     {% block loading %}{% endblock %}
 
     
-    <div class="box" id="map">
+    <div class="section" id="map">
         {% block map %}{% endblock %}
     </div>
     
