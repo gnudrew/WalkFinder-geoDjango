@@ -49,6 +49,9 @@ def mapgen_view(request):
         }
         return render(request,"base.html",context)
 
+def sanitize_location_inp():
+    pass
+
 def routegen_view(request):
     if request.method=='GET':
         # retrieve session inputs, or default if first call
@@ -83,10 +86,12 @@ def routegen_view(request):
         
         ## Generate new graph if time changed, else load previous graph from memory
         # path to file
+        #~~ JQ <-- store these somewhere else?
         base_dir = settings.BASE_DIR
         save_dir = os.path.join(base_dir, "data")
         file_path = os.path.join(save_dir, "G.graphml") # use 1 file for PoC
         # constants
+        #~~ JQ <-- 'magic numbers'; extract sensible constants (unit conversions...)
         speed_meters_per_min = 3*(1609.)/60
         distance = speed_meters_per_min * target_time
 
