@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block input %}
+{% block message %}
 <!-- Render popup if it's not a POST request -->
 {% if is_POST_request == 0 %}
 <!-- info message popup -->
@@ -14,19 +14,11 @@
         Your embarkation location is set. Now let's add an upper time limit for the round trip and start generating some routes. When satisfied with a route generation, hit "Next" below. <br><br>Tip: Press "Find a Route" again before hitting "Next". 🧭
     </div>
 </article>
-<!-- script to remove info popup on delete button click -->
-<script> 
-document.addEventListener('DOMContentLoaded', () => {
-    (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
-      const $message = $delete.parentNode.parentNode;
-  
-      $delete.addEventListener('click', () => {
-        $message.parentNode.removeChild($message);
-      });
-    });
-  });
-</script>
 {% endif %}
+{% endblock %}
+
+
+{% block input %}
 
 {{except_html|safe}}
 

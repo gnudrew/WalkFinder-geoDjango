@@ -10,18 +10,6 @@
         Cool route. Let's go! 👞👟👞👟
     </div>
 </article>
-<!-- Add script to remove message when delete button is clicked -->
-<script> 
-    document.addEventListener('DOMContentLoaded', () => {
-        (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
-          const $message = $delete.parentNode.parentNode;
-      
-          $delete.addEventListener('click', () => {
-            $message.parentNode.removeChild($message);
-          });
-        });
-      });
-    </script>
 {% endblock %}
 
 {% block input %}

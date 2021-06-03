@@ -30,29 +30,40 @@
         
     </section>
     
-    {% block input %}
+    <!-- <div class="columns">
+        <div class="column is-8"> -->
+    <section class="section">
+    {% block message %}
     {% if is_POST_request == 0 %}
-    <article class="message is-warning">
-        <div class="message-header">
-            <p>Howdy</p>
-            <button class="delete is-medium" aria-label="delete"></button>
-        </div>
-        <div class="message-body">
-            Looking for some novelty on your daily walk? Aiming for a longer wander? Either way, you've come to the right place. Let's start with your current location. 🌎
-        </div>
-    </article>
-    <!-- Add script to remove message when delete button is clicked -->
+            <article class="message is-warning">
+                <div class="message-header">
+                    <p>Howdy</p>
+                    <button class="delete is-medium" aria-label="delete"></button>
+                </div>
+                <div class="message-body">
+                    Looking for some novelty on your daily walk? Aiming for a longer wander? Either way, you've come to the right place. Let's start with your current location. 🌎
+                </div>
+            </article>
+    {% endif %}
+    {% endblock %}
+    </section>
+        <!-- </div>
+    </div> -->
+
+
+    <!-- Add script to remove messages when delete button is clicked -->
     <script> 
         document.addEventListener('DOMContentLoaded', () => {
             (document.querySelectorAll('.message .delete') || []).forEach(($delete) => {
-                const $message = $delete.parentNode.parentNode;
+                const $message = $delete.parentNode.parentNode.parentNode;
                 $delete.addEventListener('click', () => {
                     $message.parentNode.removeChild($message);
                 });
             });
         });
-    </script>    
-    {% endif %}
+    </script>   
+
+    {% block input %}
 
     <script>
         // Standard Geolocation API call
@@ -62,8 +73,7 @@
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(showPosition);
                 } else { 
-                    document.getElementById("no-geo").innerHTML = 
-                    "GeoLocation is not supported by this browser.";
+                    document.getElementById("no-geo").hidden = false;
                 }
             }
             function showPosition(position) {
@@ -92,42 +102,60 @@
     </script>
 
     <p id="no-geo" hidden>Geolocation not available.</p>
-    <button id="btn_gps" class="button is-danger" autofocus>Get My GPS Location</button>
-    <button id="btn_toggle" class="button is-info">Toggle Manual Input</button>
-    <a class="button is-danger is-outlined" href="/routegen/">NEXT: Generate Routes</a>
-    <br>
+
+    <!-- Buttons -->
+    <div class="box">
+        <div class="columns is-1">
+            <div class="column is-narrow">
+                <button id="btn_gps" class="button is-danger" autofocus>Get My GPS Location</button>
+            </div>
+            <div class="column is-narrow">
+                <button id="btn_toggle" class="button is-info">Toggle Manual Input</button>
+            </div>
+            <div class="column is-narrow">
+                <a class="button is-danger is-outlined" href="/routegen/">NEXT: Generate Routes</a>
+            </div>
+        </div>
+    </div>
 
     <form class="box is-hidden" id="mapgen" action="/mapgen/" method="POST"> {% csrf_token %}
-        <div class="field">
-            <label class="label" for="lat">Latitude:</label>
-            <div class="control">
-                <input class = "input"
-                    type="number" 
-                    id="lat" 
-                    name="lat" 
-                    min="-90" 
-                    max="90" 
-                    step=".00001"
-                    value="44.78488"
-                    required>
+        <div class="columns">
+            <div class="column is-narrow">
+                <div class="field">
+                    <label class="label" for="lat">Latitude:</label>
+                    <div class="control">
+                        <input class = "input"
+                            type="number" 
+                            id="lat" 
+                            name="lat" 
+                            min="-90" 
+                            max="90" 
+                            step=".00001"
+                            value="44.78488"
+                            required>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-narrow">
+                <div class="field">
+                    <label class="label" for="lon">Longitude:</label>
+                    <div class="control">
+                        <input class="input"
+                            type="number"
+                            id="lon" 
+                            name="lon" 
+                            min="-180" 
+                            max="180" 
+                            step=".00001"
+                            value="-93.14365"
+                            required>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-narrow">
+                <button class="button is-danger" type="submit">Show Map</button>
             </div>
         </div>
-        <div class="field">
-            <label class="label" for="lon">Longitude:</label>
-            <div class="control">
-                <input class="input"
-                    type="number"
-                    id="lon" 
-                    name="lon" 
-                    min="-180" 
-                    max="180" 
-                    step=".00001"
-                    value="-93.14365"
-                    required>
-            </div>
-        </div>
-        <button class="button is-danger" type="submit">Show Map</button>
-        
     </form>
 
     {% endblock %}
@@ -142,14 +170,16 @@
         {% block map %}{% endblock %}
     </div>
     
-    <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
-        <ul>
-            <li class="is-active"><a href="#">Here</a></li>
-            <li><a href="#">are</a></li>
-            <li><a href="#">some</a></li>
-            <li><a href="#">breadcrumbs</a></li>
-        </ul>
-    </nav>
+    <div class="block">
+        <nav class="breadcrumb is-centered" aria-label="breadcrumbs">
+            <ul>
+                <li class="is-active"><a href="#">Here</a></li>
+                <li><a href="#">are</a></li>
+                <li><a href="#">some</a></li>
+                <li><a href="#">breadcrumbs</a></li>
+            </ul>
+        </nav>
+    </div>
 
 </body>
 </html>
