@@ -12,7 +12,7 @@ Determine walking routes from arbitrary start location that are (a) time-constra
 * **Database**: PostgreSQL/PostGIS
 
 ## Usage:
-* Live deployment: [WalkFinder v.0.2](https://calm-falls-98051.herokuapp.com/)
+* Live deployment: [WalkFinder v.0.1](https://calm-falls-98051.herokuapp.com/)
 * Use it on-the-fly from your GPS-enabled mobile device from anywhere.
 * Use it from your desktop browser to explore walking options branching out from your home or work location.
 * Stay tuned; I'm adding features and will ship them to the above website periodically.
