@@ -1,6 +1,23 @@
 import folium
 import osmnx as ox
-import branca
+# import branca
+# import re
+
+def build_popup(title, lat, lon):
+    popup_html = f"""
+    <!-- import Bulma -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <!-- content -->
+    <div class="content is-small">
+        <p>
+            <strong>{title} at</strong><br>
+            Lat: {lat}<br>
+            Lon: {lon}
+        </p>
+    </div>
+    """
+    iframe = folium.IFrame(popup_html)
+    return folium.Popup(iframe, min_width=110, max_width=200, height=150)
 
 def buildmap_start(lat, lon):
     start_loc=(lat,lon)
@@ -17,20 +34,11 @@ def buildmap_start(lat, lon):
         max_zoom=20,
     )
 
-    popup_html = f"""
-        <h3 class="is-title is-small">Home at:</h3>
-        <p class="">
-        Lat: <span class="tag">{lat}</span><br>
-        Lon: <span class="tag">{lon}</span>
-        </p>
-    """
-    popup_iframe = branca.element.IFrame(html=popup_html,width=180,height=108)
-    popup = folium.Popup(popup_iframe, max_width=180)
     folium.Marker(
         start_loc, 
         icon=folium.Icon(color='red', icon='home', prefix='fa'), 
-        tooltip='clickable', 
-        popup=popup, 
+        tooltip='click me', 
+        popup=build_popup("Starting",lat,lon), 
     ).add_to(m)
 
     return m
@@ -47,19 +55,12 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
     # set rezzom box for map after adding new marker
     # rezoom_box = [(start_loc[0]-.0025, start_loc[1]-.005), (start_loc[0]+.0025, start_loc[1]+.005)] # bounding box specified by two points: [southwest, northeast]
 
-    # print('======== buildmap_route() ========')
-    # print('start_loc is: ',start_loc)
-    # print('rand_loc is: ',end_loc)
-
-    # add marker at rand_loc
+    # add marker at end_loc
     folium.Marker(
-        end_loc, # hardcode something in for now
-        # colors:
-        # purply-blue: #715EC1
-
+        end_loc,
         icon=folium.Icon(color='red', icon='reply', prefix='fa'),
-        tooltip='clickable',
-        popup='Turnback @',
+        tooltip='click me',
+        popup=build_popup("Turnaround",end_loc[0],end_loc[1]),
     ).add_to(m)
 
     # m.fit_bounds(rezoom_box)
@@ -73,12 +74,11 @@ def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None):
             
     return m
 
-def buildmap_walk(m, start_loc, end_loc):
+def buildmap_walk(route, start_loc, end_loc):
 # Given homebase map, start location, and end location, add route to end location.
 # Assume homebase map has Marker object at start_loc, but no marker at end_loc.
     pass
-# generate route object
-
+# load route object
 
 # generate end marker
 
