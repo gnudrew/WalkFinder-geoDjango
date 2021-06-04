@@ -3,7 +3,7 @@ import os
 
 from django.shortcuts import render, redirect
 from .models import Mapgens
-from .buildmap import buildmap_start, buildmap_route
+from .buildmap import buildmap_base, buildmap_route
 
 from django.contrib.gis.geos import Point
 from random import random as r # interval r() -> x in [0,1)
@@ -32,7 +32,7 @@ def mapgen_view(request):
         # print("(lat,lon) = ",str((lat,lon)))
         # print('====== END mapgen_view ======')
         # build map
-        m = buildmap_start(lat, lon)
+        m = buildmap_base(lat, lon)
 
         context = {
             'is_POST_request':1,
@@ -52,6 +52,12 @@ def mapgen_view(request):
 def sanitize_location_inp():
     pass
 
+def get_graph_filepath():
+    base_dir = settings.BASE_DIR
+    save_dir = os.path.join(base_dir, "data")
+    filepath = os.path.join(save_dir, "G.graphml") # use 1 file for PoC
+    return filepath
+
 def routegen_view(request):
     if request.method=='GET':
         # retrieve session inputs, or default if first call
@@ -59,7 +65,7 @@ def routegen_view(request):
         lon = request.session.get('lon', -93.14365)
         target_time = request.session.get('target_time',10)
         # rebuild map
-        m = buildmap_start(lat,lon)
+        m = buildmap_base(lat,lon)
 
         context = {
             'folium_map':m._repr_html_(),
@@ -85,16 +91,9 @@ def routegen_view(request):
         lon = float(request.session['lon'])
         
         ## Generate new graph if time changed, else load previous graph from memory
-        # path to file
-        #~~ JQ <-- store these somewhere else?
-        base_dir = settings.BASE_DIR
-        save_dir = os.path.join(base_dir, "data")
-        file_path = os.path.join(save_dir, "G.graphml") # use 1 file for PoC
         # constants
-        #~~ JQ <-- 'magic numbers'; extract sensible constants (unit conversions...)
-        speed_meters_per_min = 3*(1609.)/60
+        speed_meters_per_min = 80.45
         distance = speed_meters_per_min * target_time
-
         if is_new_time or is_first_request:
             # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
             is_first_request = 0
@@ -109,7 +108,7 @@ def routegen_view(request):
             except (ValueError, NetworkXPointlessConcept) as err:
                 print("EXCEPTED:", type(err), "; MESSAGE:", err)
                 # rebuild map
-                m = buildmap_start(lat, lon)
+                m = buildmap_base(lat, lon)
                 # Build error html
                 except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>No walking nodes found in search radius. Either you're way out in the Boonies or your target time is too small. Please adjust your inputs and try again.</p></div>"
                 context['except_html'] = except_html
@@ -119,7 +118,7 @@ def routegen_view(request):
                 print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
                             
                 # rebuild map
-                m = buildmap_start(lat, lon)
+                m = buildmap_base(lat, lon)
                 # exception html
                 except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
                 context['except_html'] = except_html
@@ -128,11 +127,11 @@ def routegen_view(request):
 
             # store G to file
             print("Saving Graph to memory...")
-            save_graphml(G, filepath=file_path)
+            save_graphml(G, filepath=get_graph_filepath())
         else:
             # load previous graph
             print("Loading Graph from memory...")
-            G = load_graphml(filepath=file_path)
+            G = load_graphml(filepath=get_graph_filepath())
 
         ## Calculate a Random Route
         print("Calculating a random route...")
@@ -155,16 +154,18 @@ def routegen_view(request):
 
         # Find route, a list of nodes, from start to end
         route = ox.distance.shortest_path(G, nn, node_ids[chosen_one])
+        # Store route to session
+        request.session['route'] = route
 
         # build map from these inputs
         print("Building a new Map...")
-        m = buildmap_start(lat, lon)
+        m = buildmap_base(lat, lon)
         try: # got ValueError : "graph contains no edges"
             m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
         except ValueError as err: # likely graph has no edges
             print("EXCEPTED:", type(err), "; MESSAGE:", err)
             # rebuild map
-            m = buildmap_start(lat, lon)
+            m = buildmap_base(lat, lon)
             # exception html
             except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>We found a valid start node, but the walking network within your inputs is too small. Please increase your target time or relocate and try again.</p></div>"
 
@@ -182,7 +183,7 @@ def routegen_view(request):
             print("EXCEPTED: unkown; MESSAGE: Try: call of buildmap_route() in routegen_view()")
                         
             # rebuild map
-            m = buildmap_start(lat, lon)
+            m = buildmap_base(lat, lon)
             # exception html
             except_html = "<div style='border:4px solid Tomato;'><h3>Processing Error</h3><p>An unknown error occured. Please ask a Dev to consult the server logs and try again.</p></div>"
 
@@ -229,19 +230,20 @@ def walk_view(request):
     rand_lat = request.session.get('rand_lat')
     rand_lon = request.session.get('rand_lon')
     target_time = request.session.get('target_time')
-    # G = graph_read(request.session['G'])
+    G = load_graphml(filepath=get_graph_filepath())
+    route = request.session.get('route')
 
     # If the user landed here without storing necessary inputs first...
-    # Send them to '/routegen'
+    # REDIRECT to '/routegen'
     if any([not rand_lat, not rand_lon, not target_time]):
         return redirect('/routegen')
-    # Send them home
+    # REDIRECT to '/'
     elif any([not lat, not lon]):
         return redirect('')
 
     # Build the map
-    m = buildmap_start(lat, lon)
-    m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon))
+    m = buildmap_base(lat, lon)
+    m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route, plot_G=False)
     
     return render(request, "walk.html", 
     {
