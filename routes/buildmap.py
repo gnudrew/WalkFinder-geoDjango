@@ -1,5 +1,6 @@
 import folium
 import osmnx as ox
+import requests
 # import branca
 # import re
 
@@ -35,9 +36,20 @@ def build_marker_turnaround(lat, lon):
         popup=build_popup("Turnaround",lat,lon),
     )
 
-def verify_tileserver(url):
-    "https://tiles.stadiamaps.com/tiles/outdoors/16/15811/23629@2x.png"
-    return
+def check_tileserver(url="https://tiles.stadiamaps.com/tiles/outdoors/16/15811/23629@2x.png"):
+    ## FUNC NOT TESTED YET
+    # url = "https://tiles.stadiamaps.com/tiles/outdoors/16/15811/23629@2x.png"
+    headers = {
+    'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:61.0) Gecko/20100101 Firefox/61.0',
+    'Accept-Language': 'en',
+    }
+
+    response = requests.get(url,headers=headers)
+    c = response.status_code//100
+    if (c == 2) or (c == 3):
+        return True
+    elif (c == 4) or (c == 5):
+        return False
 
 def buildmap_base(lat, lon):
     attribution = """
@@ -45,10 +57,19 @@ def buildmap_base(lat, lon):
         &copy; <a href="https://stadiamaps.com/">Stadia Maps</a>,   
         &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> 
     """
+    # Try preferred Tile server, otherwise default
+    preferred_tileset="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
+    default_tileset="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    # if check_tileserver(url=preferred_tileset):
+    #     tileset = preferred_tileset
+    # else:
+    #     tileset = default_tileset
+    tileset = preferred_tileset
+
     m = folium.Map(
         location=(lat,lon), 
         zoom_start=16,
-        tiles="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
+        tiles=tileset,
         attr=attribution,
         max_zoom=20,
     )
