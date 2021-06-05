@@ -35,6 +35,10 @@ def build_marker_turnaround(lat, lon):
         popup=build_popup("Turnaround",lat,lon),
     )
 
+def verify_tileserver(url):
+    "https://tiles.stadiamaps.com/tiles/outdoors/16/15811/23629@2x.png"
+    return
+
 def buildmap_base(lat, lon):
     attribution = """
         Map data from &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>,
@@ -44,10 +48,12 @@ def buildmap_base(lat, lon):
     m = folium.Map(
         location=(lat,lon), 
         zoom_start=16,
-        # tiles="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
+        tiles="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
         attr=attribution,
         max_zoom=20,
     )
+
+    # folium.TileLayer
 
     build_marker_homebase(lat,lon).add_to(m)
 
