@@ -10,6 +10,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- import Bulma -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    <!-- Font Awesome 5 -->
+    <script src="https://kit.fontawesome.com/0b88c99c07.js" crossorigin="anonymous"></script>
     <!-- load my .css -->
     <link rel="stylesheet" href="{% static 'routes/css/base.css' %}"> <!-- Jinja2 syntax from Django DOCS -->
     <!-- Favicon Generator: https://formito.com/tools/favicon -->
@@ -109,13 +111,13 @@
                 <span class="icon">
                     <i class="fas fa-map-marker-alt"></i>
                 </span>
-                <span>My location</span>
+                <span>Get my location</span>
             </button>
             <button id="btn_toggle" class="button is-info">
                 <span class="icon">
                     <i class="fas fa-keyboard"></i>
                 </span>
-                <span>Toggle Lat/Lon</span>
+                <span>Manual input</span>
             </button>
             <a class="button is-danger is-outlined" href="/routegen/">
                 <span class="icon-text">
