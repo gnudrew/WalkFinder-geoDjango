@@ -72,12 +72,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             function getLocation() {     
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(showPosition);
+                    navigator.geolocation.getCurrentPosition(
+                        writePosition, // success callback
+                        presentError // error callback
+                    );
                 } else { 
                     document.getElementById("no-geo").hidden = false;
                 }
             }
-            function showPosition(position) {
+            function writePosition(position) {
                 document.getElementById("lat").value = position.coords.latitude.toFixed(5);
                 // $("#lat").val(position.coords.latitude.toFixed(5)); 
                 document.getElementById("lon").value = position.coords.longitude.toFixed(5);
@@ -85,6 +88,11 @@
                 // submit form
                 document.forms["mapgen"].submit()
             }
+            function presentError(e) {
+                var msg = `Geolocation Error #${e.code}: ${e.message}`;
+                alert(msg);
+            }
+
             // toggle input form for coordinates
             function showMapgenForm() {
                 var flist = document.forms["mapgen"].classList;
