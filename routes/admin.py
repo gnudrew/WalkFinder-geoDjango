@@ -6,5 +6,6 @@ from .models import Mapgens
 
 @admin.register(Mapgens)
 class MapgensAdmin(OSMGeoAdmin):
-    list_display = ('home_loc', 'target_time', 'speed_mph')
-    readonly_fields = ('created_at',)
+    list_display = ('created_at','home_loc','target_time') # diplsayed in summary page
+    fields = ('created_at','home_loc',('target_time','dist')) # displayed in object detail page
+    readonly_fields = ('created_at',) # cause this field to be displayed (otherwise hidden)
