@@ -1,13 +1,15 @@
 from django.contrib.gis.db import models
 
-class Start(models.Model):
-# this is a test Model
-    target_time  = models.IntegerField(default=15)
-    lat          = models.DecimalField(decimal_places=6, max_digits=9, default=44.786761)
-    lon          = models.DecimalField(decimal_places=6, max_digits=9, default=-93.145689)
-    # 44.786761, -93.145689 <-- Lebanon Hills path intersection
+# 44.78676, -93.14569 <-- Lebanon Hills Regional Park, 5-way path intersection
 
-class Mapgens(models.Model):
+class TimeStampMixin(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class Mapgens(TimeStampMixin):
 # this table holds data to (re)generate graph objects + map
     home_loc     = models.PointField() # (lat,lon) at home marker
     start_loc    = models.PointField() # (lat,lon) at route start node
@@ -26,6 +28,6 @@ class Routes(models.Model):
     # node_list    = models.JSONField
     pass
 
-class Walks(models.Model):
+class Walks(TimeStampMixin):
 # this table holds data from hot location walk
     pass
