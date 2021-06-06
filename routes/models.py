@@ -3,14 +3,16 @@ from django.contrib.gis.db import models
 # 44.78676, -93.14569 <-- Lebanon Hills Regional Park, 5-way path intersection
 
 class TimeStampMixin(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at   = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at   = models.DateTimeField(auto_now=True,null=True)
 
     class Meta:
         abstract = True
 
-class Mapgens(TimeStampMixin):
+class Mapgens(models.Model):
 # this table holds data to (re)generate graph objects + map
+    created_at   = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at   = models.DateTimeField(auto_now=True,null=True)
     home_loc     = models.PointField() # (lat,lon) at home marker
     start_loc    = models.PointField() # (lat,lon) at route start node
     end_loc      = models.PointField(null=True) # (lat,lon) at route end node
