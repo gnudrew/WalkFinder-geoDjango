@@ -5,14 +5,14 @@
 <!-- Render popup if it's not a POST request -->
 {% if is_POST_request == 0 %}
 <!-- info message popup -->
-<section class="section">
+<section class="section py-2">
     <article class="message is-warning">
         <div class="message-header">
             <p>Cool spot</p>
             <button class="delete" aria-label="delete is-medium"></button>
         </div>
         <div class="message-body">
-            Your embarkation location is set. Now let's add an upper time limit for the round trip and start generating some routes. When satisfied with a route generation, hit "Next" below. <br><br>Tip: Press "Find a Route" again before hitting "Next". 🧭
+            Embarkation location locked. Now set an upper time limit and let's generate some routes. When satisfied hit <em>Walk</em>. <br><br><b>Tip:</b> Press <em>Route it</em> again. 🧭
         </div>
     </article>
 </section>
