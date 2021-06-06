@@ -106,65 +106,74 @@
 
     <!-- Buttons -->
     <div class="box">
-        <p class="buttons is-1 is-mobile">
-            <button id="btn_gps" class="button is-danger" autofocus>
-                <span class="icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                </span>
-                <span>Get my location</span>
-            </button>
-            <button id="btn_toggle" class="button is-info">
-                <span class="icon">
-                    <i class="fas fa-keyboard"></i>
-                </span>
-                <span>Manual input</span>
-            </button>
-            <a class="button is-danger is-outlined" href="/routegen/">
-                <span class="icon-text">
-                    <span>Next</span>
+        <div class="field is-grouped is-grouped-centered">
+            <p class="control">
+                <button id="btn_gps" class="button is-danger" autofocus>
                     <span class="icon">
-                        <i class="fas fa-arrow-circle-right"></i>
+                        <i class="fas fa-map-marker-alt"></i>
                     </span>
-                </span>
-            </a>
+                    <span>My Location</span>
+                </button>
+            </p>
+            <p class="control">
+                <button id="btn_toggle" class="button is-info">
+                    <span class="icon">
+                        <i class="fas fa-keyboard"></i>
+                    </span>
+                </button>
+            </p>
+            <p class="control">            
+                <a class="button is-danger is-outlined" href="/routegen/">
+                    <span class="icon-text">
+                        <span>Routes</span>
+                        <span class="icon">
+                            <i class="fas fa-arrow-circle-right"></i>
+                        </span>
+                    </span>
+                </a>
+            </p>
         </div>
     </div>
 
     <form class="box is-hidden" id="mapgen" action="/mapgen/" method="POST"> {% csrf_token %}
-        <div class="columns">
-            <div class="column is-narrow">
-                <div class="field">
-                    <label class="label" for="lat">Latitude:</label>
-                    <div class="control">
-                        <input class = "input"
-                            type="number" 
-                            id="lat" 
-                            name="lat" 
-                            min="-90" 
-                            max="90" 
-                            step=".00001"
-                            value="44.78488"
-                            required>
-                    </div>
-                </div>
+        <div class="field">
+            <div class="control has-icons-left">
+                <input class="input"
+                    placeholder="latitude"
+                    title="latitude"
+                    type="number" 
+                    id="lat" 
+                    name="lat" 
+                    min="-90" 
+                    max="90" 
+                    step=".00001"
+                    value="44.78488"
+                    required>
+                <span class="icon is-left">
+                    <i class="fas fa-ruler-vertical"></i>
+                </span>
             </div>
-            <div class="column is-narrow">
-                <div class="field">
-                    <label class="label" for="lon">Longitude:</label>
-                    <div class="control">
-                        <input class="input"
-                            type="number"
-                            id="lon" 
-                            name="lon" 
-                            min="-180" 
-                            max="180" 
-                            step=".00001"
-                            value="-93.14365"
-                            required>
-                    </div>
-                </div>
+        </div>
+        <div class="field">
+            <div class="control has-icons-left">
+                <input class="input"
+                    placeholder="longitude"
+                    title="longitude"
+                    type="number"
+                    id="lon" 
+                    name="lon" 
+                    min="-180" 
+                    max="180" 
+                    step=".00001"
+                    value="-93.14365"
+                    required>
+                <span class="icon is-left">
+                    <i class="fas fa-ruler-horizontal"></i>
+                </span>
             </div>
-            <div class="column is-narrow">
+        </div>
+        <div class="field is-grouped is-grouped-centered">
+            <div class="control">
                 <button class="button is-danger" type="submit">Show Map</button>
             </div>
         </div>
