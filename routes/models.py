@@ -3,8 +3,8 @@ from django.contrib.gis.db import models
 # 44.78676, -93.14569 <-- Lebanon Hills Regional Park, 5-way path intersection
 
 class TimeStampMixin(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
 
     class Meta:
         abstract = True
