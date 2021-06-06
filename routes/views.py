@@ -61,9 +61,9 @@ def get_graph_filepath():
 def routegen_view(request):
     if request.method=='GET':
         # retrieve session inputs, or default if first call
-        lat = request.session.get('lat', 44.78488)
-        lon = request.session.get('lon', -93.14365)
-        target_time = request.session.get('target_time',10)
+        lat = request.session.get('lat', "")
+        lon = request.session.get('lon', "")
+        target_time = request.session.get('target_time',"")
         # rebuild map
         m = buildmap_base(lat,lon)
 
@@ -92,7 +92,7 @@ def routegen_view(request):
         
         ## Generate new graph if time changed, else load previous graph from memory
         # constants
-        speed_meters_per_min = 80.45
+        speed_meters_per_min = 80.45 # that's 3 mph walking speed
         distance = speed_meters_per_min * target_time
         if is_new_time or is_first_request:
             # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
