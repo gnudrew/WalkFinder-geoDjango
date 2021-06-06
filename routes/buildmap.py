@@ -64,7 +64,7 @@ def buildmap_base(lat, lon):
     #     tileset = preferred_tileset
     # else:
     #     tileset = default_tileset
-    tileset = preferred_tileset
+    tileset = default_tileset
 
     m = folium.Map(
         location=(lat,lon), 
