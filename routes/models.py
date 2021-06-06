@@ -12,7 +12,6 @@ class TimeStampMixin(models.Model):
 class Mapgens(models.Model):
 # this table holds data to (re)generate graph objects + map
     created_at   = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at   = models.DateTimeField(auto_now=True,null=True)
     home_loc     = models.PointField() # (lat,lon) at home marker
     start_loc    = models.PointField() # (lat,lon) at route start node
     end_loc      = models.PointField(null=True) # (lat,lon) at route end node
