@@ -35,17 +35,17 @@
     
     {% block message %}
     {% if is_POST_request == 0 %}
-        <section class="section">
-            <article class="message is-warning">
-                <div class="message-header">
-                    <p>Howdy</p>
-                    <button class="delete is-medium" aria-label="delete"></button>
-                </div>
-                <div class="message-body">
-                    Looking for some novelty on your daily walk? Aiming for a longer wander? Either way, you've come to the right place. Let's start with your current location. 🌎
-                </div>
-            </article>
-        </section>
+    <section class="section">
+        <article class="message is-warning">
+            <div class="message-header">
+                <p>Howdy</p>
+                <button class="delete is-medium" aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+                Looking for some novelty on your daily walk? Aiming for a longer wander? Either way, you've come to the right place. Let's start with your current location. 🌎
+            </div>
+        </article>
+    </section>
     {% endif %}
     {% endblock %}
     
@@ -137,51 +137,52 @@
                 </a>
             </p>
         </div>
+        <form class="is-hidden" id="mapgen" action="/mapgen/" method="POST"> {% csrf_token %}
+            <div class="field">
+                <div class="control has-icons-left">
+                    <input class="input"
+                        placeholder="latitude"
+                        title="latitude"
+                        type="number" 
+                        id="lat" 
+                        name="lat" 
+                        min="-90" 
+                        max="90" 
+                        step=".00001"
+                        value="44.78488"
+                        required>
+                    <span class="icon is-left">
+                        <i class="fas fa-ruler-vertical"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control has-icons-left">
+                    <input class="input"
+                        placeholder="longitude"
+                        title="longitude"
+                        type="number"
+                        id="lon" 
+                        name="lon" 
+                        min="-180" 
+                        max="180" 
+                        step=".00001"
+                        value="-93.14365"
+                        required>
+                    <span class="icon is-left">
+                        <i class="fas fa-ruler-horizontal"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                    <button class="button is-info" type="submit">Submit Coordinates</button>
+                </div>
+            </div>
+        </form>
     </div>
 
-    <form class="box is-hidden" id="mapgen" action="/mapgen/" method="POST"> {% csrf_token %}
-        <div class="field">
-            <div class="control has-icons-left">
-                <input class="input"
-                    placeholder="latitude"
-                    title="latitude"
-                    type="number" 
-                    id="lat" 
-                    name="lat" 
-                    min="-90" 
-                    max="90" 
-                    step=".00001"
-                    value="44.78488"
-                    required>
-                <span class="icon is-left">
-                    <i class="fas fa-ruler-vertical"></i>
-                </span>
-            </div>
-        </div>
-        <div class="field">
-            <div class="control has-icons-left">
-                <input class="input"
-                    placeholder="longitude"
-                    title="longitude"
-                    type="number"
-                    id="lon" 
-                    name="lon" 
-                    min="-180" 
-                    max="180" 
-                    step=".00001"
-                    value="-93.14365"
-                    required>
-                <span class="icon is-left">
-                    <i class="fas fa-ruler-horizontal"></i>
-                </span>
-            </div>
-        </div>
-        <div class="field is-grouped is-grouped-centered">
-            <div class="control">
-                <button class="button is-danger" type="submit">Show Map</button>
-            </div>
-        </div>
-    </form>
+
 
     {% endblock %}
 
