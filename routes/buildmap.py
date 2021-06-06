@@ -60,6 +60,8 @@ def buildmap_base(lat, lon):
     # Try preferred Tile server, otherwise default
     preferred_tileset="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
     default_tileset="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    tileset = default_tileset
+
     # if check_tileserver(url=preferred_tileset):
     #     tileset = preferred_tileset
     # else:
