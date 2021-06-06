@@ -24,40 +24,56 @@
 
 {{except_html|safe}}
 
-<form class="box" id="form_time" action="/routegen/" method="POST"> {% csrf_token %}
-    <div class="columns">
-        <div class="column is-narrow">
-            <div class="field">
-                <label class="label" for="target_time">Target Time (mins):</label>
-                <div class="control">
-                    <input class = "input"
-                        onchange="check(this)"
-                        type="number"
-                        id="target_time"
-                        name="target_time" 
-                        min="0" 
-                        max="120" 
-                        step="1" 
-                        required
-                        autofocus>
-                </div>
-            </div>
+<form class="" id="form_time" action="/routegen/" method="POST"> {% csrf_token %}
+    <div class="field has-addons is-centered">
+        <!-- <label class="label" for="target_time">Target Time (mins):</label> -->
+        <div class="control has-icons-left is-expanded">
+            <input class = "input"
+                placeholder="target time (mins)"
+                title="target time (mins)"
+                onchange="check(this)"
+                type="number"
+                id="target_time"
+                name="target_time" 
+                min="0" 
+                max="120" 
+                step="1" 
+                required
+                >
+            <span class="icon is-left">
+                <i class="far fa-clock"></i>
+            </span>
         </div>
-        <div class="column is-narrow">
-            <div class="columns">
-                <div class="column is-narrow">
-                    <button class="button is-primary" id="abc" type="submit">Find a Route</button>
-                </div>
-                <div class="column is-narrow">
-                    <a class="button is-danger is-outlined" href="/walk">NEXT: Start Walk</a>
-                </div>                    
-            </div>
+        <div class="control">
+            <button class="button is-info" id="submit_route" type="submit" autofocus>
+                <span class="icon">
+                    <i class="fas fa-route"></i>
+                </span>
+                <span>Route It</span>
+                <span class="icon">
+                    <i class="fas fa-sync-alt"></i>
+                </span>
+            </button>  
         </div>
-    
-    </div>  
+        <div class="control">
+            <a class="button is-danger is-outlined" href="/walk">
+                <span>Walk</span>
+                <!-- <span class="icon is-medium">
+                    <i class="fas fa-walking"></i>
+                </span> -->
+                <span class="icon">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </span>
+            </a>
+        </div>
+        <!-- <p class="help">This is a form validation message</p> -->
+    </div>
     <input id="is_new_time" name="is_new_time" type="hidden" value="0">
     <input id="is_first_request" name="is_first_request" type="hidden" value="1">
+
 </form>
+
+
 <!-- Handle is_first_request value -->
 {% if is_first_request == 0 %}
 <script>
