@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.contrib.gis.admin import OSMGeoAdmin
-from .models import Mapgens, Start
+from .models import Mapgens 
 
 # Register your models here.
-admin.site.register(Start)
 
 @admin.register(Mapgens)
 class MapgensAdmin(OSMGeoAdmin):
-    list_display = ('home_loc', 'target_time', 'speed_mph')
+    list_display = ('created_at','home_loc','target_time') # diplsayed in summary page
+    fields = ('created_at','home_loc',('target_time','dist')) # displayed in object detail page
+    readonly_fields = ('created_at',) # cause this field to be displayed (otherwise hidden)
