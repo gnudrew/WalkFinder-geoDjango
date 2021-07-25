@@ -2,6 +2,7 @@ from django.conf import settings
 import os
 
 from django.shortcuts import render, redirect
+from django.views.generic.base import TemplateView
 from .models import Mapgens
 from .buildmap import buildmap_base, buildmap_route
 
@@ -254,3 +255,7 @@ def walk_view(request):
         'rand_lon':rand_lon,
         'target_time':target_time,
     })
+
+class SinglePageView(TemplateView):
+    template_name='single_page.html'
+

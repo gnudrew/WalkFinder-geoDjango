@@ -18,11 +18,14 @@ from django.urls import path
 from routes.views import home_view, mapgen_view, routegen_view, walk_view
 from django.views.generic.base import RedirectView
 
+from routes.views import SinglePageView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view),
     path('mapgen/', mapgen_view),
     path('routegen/', routegen_view),
     path('walk/', walk_view),
+    path('spa', SinglePageView.as_view(), name='single-page-view'),
     # path('favicon.ico', RedirectView.as_view(url='favicon.svg'))
-]
+]   
