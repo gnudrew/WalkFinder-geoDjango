@@ -255,7 +255,3 @@ def walk_view(request):
         'rand_lon':rand_lon,
         'target_time':target_time,
     })
-
-class SinglePageView(TemplateView):
-    template_name='single_page.html'
-
