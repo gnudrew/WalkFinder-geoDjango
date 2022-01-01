@@ -6,3 +6,4 @@ gunicorn==20.1.*
 dj-database-url==0.5.0
 folium==0.12.*
 scikit-learn==0.24.*
+dj-database-url

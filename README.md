@@ -11,6 +11,20 @@ Determine walking routes from arbitrary start location that are (a) time-constra
 * **Backend**: GeoDjango, OSMnx, Networkx, folium
 * **Database**: PostgreSQL/PostGIS
 
+## Installation:
+* Install miniconda (or Anaconda).
+* > conda config --prepend channels conda-forge 
+* > conda create -n ox --strict-channel-priority osmnx
+* > activate ox
+* > pip install -r requirements.txt
+* Add the following code to `settings.py` in the Django project, of course tweaked to use the correct path and GDAL version, which here is `gdal303.dll`:
+```
+os.environ['GDAL_DATA'] = r"C:\Users\gnudr\miniconda3\envs\ox\Lib\site-packages\osgeo\data\gdal"
+os.environ['PROJ_LIB'] = r"C:\Users\gnudr\miniconda3\envs\ox\Lib\site-packages\osgeo\data\proj"
+os.environ['PATH'] = r"C:\Users\gnudr\miniconda3\envs\ox\Lib\site-packages\osgeo" +";" + os.environ['PATH']
+GDAL_LIBRARY_PATH = r'C:\Users\gnudr\miniconda3\envs\ox\Lib\site-packages\osgeo\gdal303.dll' 
+```
+
 ## Usage:
 * Live deployment: [WalkFinder v.0.1](https://calm-falls-98051.herokuapp.com/)
 * Use it on-the-fly from your GPS-enabled mobile device from anywhere.
