@@ -78,7 +78,7 @@ def routegen_view(request):
         return render(request, "routegen.html", context)
 
     if request.method=='POST':
-        print("Retrieving Stuf...")
+        print("Retrieving Stuff...")
         ## Retrieve form input
         target_time = int(request.POST.get('target_time'))
         # print("raw POST is_new:",request.POST.get('is_new_time'),"type:",type(request.POST.get('is_new_time')))
@@ -96,6 +96,7 @@ def routegen_view(request):
         ## Generate new graph if time changed, else load previous graph from memory
         # constants
         speed_meters_per_min = 80.45 # that's 3 mph walking speed
+          ## TASK --> build functionality to track user average walking speed and load this from database each time a user requests a new route.
         distance = speed_meters_per_min * target_time
         if is_new_time or is_first_request:
             # Build Graph of surrounding walking network. Assume we will walk out then back, so dist=d/2
