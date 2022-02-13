@@ -11,6 +11,7 @@ import osmnx as ox
 from networkx import NetworkXPointlessConcept
 from osmnx.io import load_graphml, save_graphml
 
+from .router import random_walk
 
 # Create your views here.
 def home_view(request):
@@ -117,7 +118,7 @@ def routegen_view(request):
                 return render(request, "routegen.html", context)
             except:
                 print("EXCEPTED: unkown; MESSAGE: Try: call of ox.graph_from_point() in routegen_view()")
-                            
+                
                 # rebuild map
                 m = buildmap_base(lat, lon)
                 # exception html
@@ -134,33 +135,61 @@ def routegen_view(request):
             print("Loading Graph from memory...")
             G = load_graphml(filepath=get_graph_filepath())
 
-        ## Calculate a Random Route
-        print("Calculating a random route...")
-        # get node id's from G
-        node_ids = [node for node in G.nodes]
-        # randomly choose a node
-        number_of_nodes = len(node_ids)
-        chosen_one = int(r()*(number_of_nodes)) # int() conversion truncates, never rounds up
-        # get lat and lon from this node
-        rand_lat = G.nodes[node_ids[chosen_one]]['y']
-        rand_lon = G.nodes[node_ids[chosen_one]]['x']
-        # store these to session
-        request.session['rand_lat'] = rand_lat
-        request.session['rand_lon'] = rand_lon
-
+        print("Finding node nearest homebase coordinates...")
         # Find nearest node to homebase coordinates
         nn = ox.distance.nearest_nodes(G, lon, lat)
         nn_lat = G.nodes[nn]['y']
         nn_lon = G.nodes[nn]['x']
+        print(f" >> lat: {lat}->{nn_lat}; lon: {nn_lon}->{nn_lon}")
 
-        # Find route, a list of nodes, from start to end
-        route = ox.distance.shortest_path(G, nn, node_ids[chosen_one])
-        # Store route to session
-        request.session['route'] = route
+        ## Calculate a Random Route from home
+        print("Calculating a random route...")
+        # Manually set method for now...
+        method = 1
+        if method == 0:
+            # fastest path to randomly selected node in full Graph
+            print(" >> [Method 0] Selecting destination point from entire graph...")
+            # get node id's from G
+            node_ids = list(G.nodes)
+            # randomly choose a node
+            number_of_nodes = len(node_ids)
+            chosen_one = int(r()*(number_of_nodes)) # int() conversion truncates, never rounds up
+
+            print(" >> [Method 0] Getting lat/lon from destination point...")
+            # get lat and lon from this node
+            rand_lat = G.nodes[node_ids[chosen_one]]['y']
+            rand_lon = G.nodes[node_ids[chosen_one]]['x']
+            # store these to session
+            request.session['rand_lat'] = rand_lat
+            request.session['rand_lon'] = rand_lon
+
+            print(" >> [Method 0] Calculating fastest route from home node to destination node")
+            # Find route, a list of nodes, from start to end
+            route = ox.distance.shortest_path(G, nn, node_ids[chosen_one])
+            print(f"route of type {type(route)}:")
+            print(route)
+            # Store route to session
+            request.session['route'] = route
+
+        elif method == 1:
+            # random walk of target distance starting at home 
+            print(" >> [Method 1] Calculating route via random walk from home node...")
+            route = random_walk(G, nn, dist=distance)
+            print(f"route of type {type(route)}:")
+            print(route)
+            # store route to session
+            request.session['route'] = route
+            # get lat and lon of final node in route and store to session
+            print(" >> [Method 1] Getting lat/lon of final node in the route")
+            rand_lat = G.nodes[route[-1]]['y']
+            rand_lon = G.nodes[route[-1]]['x']
+            request.session['rand_lat'] = rand_lat
+            request.session['rand_lon'] = rand_lon
 
         # build map from these inputs
         print("Building a new Map...")
         m = buildmap_base(lat, lon)
+        number_of_nodes = len(list(G.nodes))
         try: # got ValueError : "graph contains no edges"
             m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route)
         except ValueError as err: # likely graph has no edges
