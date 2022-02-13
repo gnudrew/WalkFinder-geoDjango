@@ -52,6 +52,7 @@ def check_tileserver(url="https://tiles.stadiamaps.com/tiles/outdoors/16/15811/2
         return False
 
 def buildmap_base(lat, lon):
+    """Given (lat, lon) coordinates, returns a folium map object centered there."""
     attribution = """
         Map data from &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>,
         &copy; <a href="https://stadiamaps.com/">Stadia Maps</a>,   
@@ -83,6 +84,7 @@ def buildmap_base(lat, lon):
     return m
 
 def buildmap_route(m, target_time, start_loc, end_loc, G=None, route=None, plot_G=True):
+    """Generates the map with route."""
     # Given:
     # m : previous map
     # target_time : how long to walk in minutes
