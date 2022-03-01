@@ -11,7 +11,7 @@ import osmnx as ox
 from networkx import NetworkXPointlessConcept
 from osmnx.io import load_graphml, save_graphml
 
-from .router import random_walk
+from .router import random_walk, dfs
 
 # Create your views here.
 def home_view(request):
@@ -145,7 +145,7 @@ def routegen_view(request):
         ## Calculate a Random Route from home
         print("Calculating a random route...")
         # Manually set method for now...
-        method = 1
+        method = 2
         if method == 0:
             # fastest path to randomly selected node in full Graph
             print(" >> [Method 0] Selecting destination point from entire graph...")
@@ -175,6 +175,20 @@ def routegen_view(request):
             # random walk of target distance starting at home 
             print(" >> [Method 1] Calculating route via random walk from home node...")
             route = random_walk(G, nn, dist=distance)
+            print(f"route of type {type(route)}:")
+            print(route)
+            # store route to session
+            request.session['route'] = route
+            # get lat and lon of final node in route and store to session
+            print(" >> [Method 1] Getting lat/lon of final node in the route")
+            rand_lat = G.nodes[route[-1]]['y']
+            rand_lon = G.nodes[route[-1]]['x']
+            request.session['rand_lat'] = rand_lat
+            request.session['rand_lon'] = rand_lon
+        elif method == 2:
+            # basic dfs until target distance is acheived
+            print(" >> [Method 2] Calculating route via dfs...")
+            route = dfs(G, nn, dist=distance)
             print(f"route of type {type(route)}:")
             print(route)
             # store route to session
