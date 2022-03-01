@@ -12,6 +12,10 @@ Determine walking routes from arbitrary start location that are (a) time-constra
 * **Database**: PostgreSQL/PostGIS
 
 ## Installation:
+
+### Setting up GeoDjango
+* https://docs.djangoproject.com/en/4.0/ref/contrib/gis/install/#windows
+### Setting up conda environment for OSMNX
 * Install miniconda (or Anaconda).
 * > conda config --prepend channels conda-forge 
 * > conda create -n ox --strict-channel-priority osmnx
