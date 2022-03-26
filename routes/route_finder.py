@@ -13,8 +13,7 @@ def random_walk(G, v, dist=500):
         u = random.sample(neighbors,1)[0]
         path.append(u)
         d += G[v][u][0]['length']
-
-    return path
+    return (path, d)
 
 def dfs(G, v_start, dist=500):
     """
@@ -24,7 +23,7 @@ def dfs(G, v_start, dist=500):
     -------
     G: networkx.Graph
         The graph object, derived from Open Street Maps (OSM) using osmnx methods
-    start: int
+    v_start: int
         The starting vertex
     distance: float
         The target route distance
@@ -46,13 +45,20 @@ def dfs(G, v_start, dist=500):
     ## track 'visited' for each node in the Graph
     visited = {node:False for node in G.nodes}
     route = [v_start]
+    branch_nodes = [] # define a branch_node as a node with 2 or more unvisited neighbors; we'll keep track of these as point to backtrack to in case we hit a deadend
     d = 0 # distance traveled
+    print(route, f"d:{round(d)}/{round(dist)}")
     cur_node = route[-1]
     visited[cur_node] = True
     while d < dist:
-        # Assume that the graph is large enough to always find at least one route greater than or equal to distance.
+    # Assume that the graph is large enough to always find at least one route greater than or equal to distance.
         neighbors = list(G.neighbors(cur_node))
-        deadend = True # check for deadends
+        # check if cur_node is a branch_node
+        unvisited_neighbors = [n for n in neighbors if not visited[n]]
+        if len(unvisited_neighbors) >= 2: # the current node is a branch node if it has at least 2 unvisited neighbors; we can backtrack here upon hitting a deadend
+            print(f"branch node at {cur_node} with {len(unvisited_neighbors)} unvisited neighbors: {unvisited_neighbors}")
+            branch_nodes.append(cur_node)
+        deadend = True # assume deadend until proven otherwise
         while neighbors:
             n = random.choice(neighbors)
             neighbors.remove(n)
@@ -62,9 +68,19 @@ def dfs(G, v_start, dist=500):
                 cur_node = n
                 visited[cur_node] = True
                 deadend = False
+                # print route step
+                print(route, f"d:{round(d)}/{round(dist)}")
                 break
         if deadend:
-            d -= G[route.pop()][route[-1]][0]['length']
-            cur_node = route[-1]
-    return route
+            print(f"deadend at {cur_node}; branch_nodes.. {branch_nodes} ")
+            # backtrack to previous branch_node
+            prev_branch_node = branch_nodes.pop()
+            while cur_node != prev_branch_node:
+                prev_node = route.pop()
+                cur_node = route[-1]
+                d -= G[cur_node][prev_node][0]['length']
+                # cur_node = prev_node
+                print(route, f"d:{round(d)}/{round(dist)}")
+    
+    return (route, d)    
     

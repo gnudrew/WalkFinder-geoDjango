@@ -11,7 +11,7 @@ import osmnx as ox
 from networkx import NetworkXPointlessConcept
 from osmnx.io import load_graphml, save_graphml
 
-from .router import random_walk, dfs
+from .route_finder import random_walk, dfs
 
 # Create your views here.
 def home_view(request):
@@ -79,9 +79,7 @@ def routegen_view(request):
         print("Retrieving Stuff...")
         ## Retrieve form input
         target_time = int(request.POST.get('target_time'))
-        # print("raw POST is_new:",request.POST.get('is_new_time'),"type:",type(request.POST.get('is_new_time')))
         is_new_time = int(request.POST.get('is_new_time')) #1=True,0=False
-        # print("tt:",target_time,";convert bool is_new):",is_new_time)
         is_first_request = int(request.POST.get('is_first_request'))
 
         # store this to session
@@ -93,7 +91,8 @@ def routegen_view(request):
         
         ## Generate new graph if time changed, else load previous graph from memory
         # constants
-        speed_meters_per_min = 80.45 # that's 3 mph walking speed
+        speed_miles_per_hour = 3
+        speed_meters_per_min = speed_miles_per_hour * 26.8224 # unit conversion
           ## TASK --> build functionality to track user average walking speed and load this from database each time a user requests a new route.
         distance = speed_meters_per_min * target_time
         if is_new_time or is_first_request:
@@ -106,7 +105,7 @@ def routegen_view(request):
             }
             print("Querying OSM API for new Graph...")
             try: # got ValueError "found no graph nodes within the requested polygon"
-                G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2, dist_type="network")
+                G = ox.graph_from_point((lat,lon), network_type="walk", dist=distance/2*1.25, dist_type="network")
             except (ValueError, NetworkXPointlessConcept) as err:
                 print("EXCEPTED:", type(err), "; MESSAGE:", err)
                 # rebuild map
@@ -147,7 +146,7 @@ def routegen_view(request):
         # Manually set method for now...
         method = 2
         if method == 0:
-            # fastest path to randomly selected node in full Graph
+        # fastest path to randomly selected node in full Graph
             print(" >> [Method 0] Selecting destination point from entire graph...")
             # get node id's from G
             node_ids = list(G.nodes)
@@ -170,11 +169,10 @@ def routegen_view(request):
             print(route)
             # Store route to session
             request.session['route'] = route
-
         elif method == 1:
-            # random walk of target distance starting at home 
+        # random walk of target distance starting at home 
             print(" >> [Method 1] Calculating route via random walk from home node...")
-            route = random_walk(G, nn, dist=distance)
+            route, route_distance = random_walk(G, nn, dist=distance)
             print(f"route of type {type(route)}:")
             print(route)
             # store route to session
@@ -186,9 +184,14 @@ def routegen_view(request):
             request.session['rand_lat'] = rand_lat
             request.session['rand_lon'] = rand_lon
         elif method == 2:
-            # basic dfs until target distance is acheived
+        # basic dfs until target distance is acheived
             print(" >> [Method 2] Calculating route via dfs...")
-            route = dfs(G, nn, dist=distance)
+            try:
+                route, route_distance = dfs(G, nn, dist=distance)
+                routegen_exception = ''
+            except Exception as e:
+                route, route_distance = [], 0
+                routegen_exception = e
             print(f"route of type {type(route)}:")
             print(route)
             # store route to session
@@ -257,10 +260,17 @@ def routegen_view(request):
         )
         print("Rendering new page...")
 
+        # unit conversions.. metric to imperial
+        route_distance = route_distance*0.00062137 # meters to miles
+        route_time = route_distance / speed_miles_per_hour * 60 # minutes
         context = {
             'is_first_request':0,
-            'target_time':target_time, 
-            'folium_map':m._repr_html_(), 
+            'target_time':target_time,
+            'folium_map':m._repr_html_(),
+            'routegen_exception':routegen_exception,
+            'route_distance':round(route_distance, 3),
+            'route_speed':round(speed_miles_per_hour, 3),
+            'route_time':round(route_time, 3),
             'number_of_nodes':number_of_nodes,
             'rand_lat':rand_lat,
             'rand_lon':rand_lon,            
