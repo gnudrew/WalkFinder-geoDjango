@@ -1,3 +1,8 @@
+/* modify base html to remove vertical scrollbar default */
+/* html {
+  overflow-y: hidden;
+} */
+
 #loading {
   height: 100vh;
   width: 100vw;

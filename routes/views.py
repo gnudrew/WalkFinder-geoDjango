@@ -172,7 +172,7 @@ def routegen_view(request):
         elif method == 1:
         # random walk of target distance starting at home 
             print(" >> [Method 1] Calculating route via random walk from home node...")
-            route, route_distance = random_walk(G, nn, dist=distance)
+            route, route_distance = random_walk(G, nn, dist=distance/2)
             print(f"route of type {type(route)}:")
             print(route)
             # store route to session
@@ -187,7 +187,8 @@ def routegen_view(request):
         # basic dfs until target distance is acheived
             print(" >> [Method 2] Calculating route via dfs...")
             try:
-                route, route_distance = dfs(G, nn, dist=distance)
+                route, route_distance = dfs(G, nn, dist=distance/2) # half round trip
+                route_distance *= 2 # convert to round trip
                 routegen_exception = ''
             except Exception as e:
                 route, route_distance = [], 0
