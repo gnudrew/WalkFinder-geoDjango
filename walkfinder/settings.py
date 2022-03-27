@@ -71,9 +71,10 @@ WSGI_APPLICATION = 'walkfinder.wsgi.application'
 DATABASES = {
     'default': {
          'ENGINE': 'django.contrib.gis.db.backends.postgis',
-         'NAME': 'postgres',
-         'USER': 'postgres',
-         'PASSWORD': 'password', # JG: Load password from ENV var. Key:Val syntax.
+         'NAME': os.environ.get('DB_NAME'),
+         'USER': os.environ.get('DB_USER'),
+         'PASSWORD': os.environ.get('DB_PASSWORD'), # JG: Load password from ENV var. Key:Val syntax.
+         'HOST': os.environ.get('DB_HOST'),
          # look for python module in PyPI (dotenv)
     },
 }
@@ -133,7 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = os.environ.get('SECRET_KEY','abs0fd980w98utas98dfu09a8yser0c123')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '*'
