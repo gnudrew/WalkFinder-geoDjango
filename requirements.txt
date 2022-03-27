@@ -5,3 +5,5 @@ gunicorn==20.1.*
 dj-database-url==0.5.0
 folium==0.12.*
 scikit-learn==0.24.*
+# the following works ASSUMING the following heroku buildpack has been designated for deploy configuration
+osmnx==1.1.*
