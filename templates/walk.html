@@ -36,5 +36,144 @@ Target Time is {{target_time}} minutes.
 {% endblock %}
 
 {% block map %}
-  {{folium_map|safe}}
+<!-- {{folium_map|safe}} -->
+
+<!-- map container --> 
+<div id="map" style="height:100%; width:100%;"></div> 
+<!-- script to build the map -->
+<script>
+    // utility function to convert json to list of lists (aka. array of arrays)
+    function obj_to_ll(obj) {
+        var keys_ll = Object.keys(obj)
+        var ll = []
+        for (var i of keys_ll) {
+            var obj_l = obj[i]
+            var keys_l = Object.keys(obj_l)
+            var l = []
+            for (var j of keys_l) {
+                l.push(obj_l[j])
+            }
+            ll.push(l)
+        }
+        return ll
+    }
+
+    // convert python context vars to js vars
+    var lat = {{lat}}
+    var lon = {{lon}}
+    var rand_lat = {{rand_lat}}
+    var rand_lon = {{rand_lon}}
+    // var route_polyline_arr = obj_to_ll({{json_route_polyline_arr|safe}}) // I was serializing a list of lists to object then back to array of arrays while debugging, but it turned out the bug was simply reversing the [lon, lat] to [lat, lon]... DOHH... anyways, it was a fun little exercise to write the serializer in python and the deserializer in javascript... so I'll leave it in the project codebase
+    var route_polyline_arr = ({{route_polyline_arr|safe}})
+    console.log(route_polyline_arr)
+
+    // initialize map location and zoom
+    var map = L.map('map').setView([lat, lon], 14);
+    // Mapbox tiles access token (public): pk.eyJ1IjoiZ251ZHJldyIsImEiOiJjbDFhNTNpbmU1NzJhM29ycHR0cnpmd25sIn0.-rOcgOmj2C3ZimMeiHcBEQ
+    // add map tiles
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', 
+        {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoiZ251ZHJldyIsImEiOiJjbDFhNTNpbmU1NzJhM29ycHR0cnpmd25sIn0.-rOcgOmj2C3ZimMeiHcBEQ'
+        }).addTo(map);
+    // add markers
+    var marker_home = L.marker([lat, lon]).addTo(map)
+    var marker_turnaround = L.marker([rand_lat, rand_lon]).addTo(map)
+    // add route polylines
+    var polyline_route = L.polyline(route_polyline_arr, {
+        color: 'red',
+        }).addTo(map)
+    // zoom map to the polyline
+    map.fitBounds(polyline_route.getBounds())
+
+    // add animated icon for live location tracking marker
+    var icon_tracking = L.divIcon({
+        iconSize: [20,20],
+        shadowSize: [0,0],
+        // color: 'red',
+        // className: 'animated-icon tracking-icon',
+    })
+    var marker_tracking = L.marker([lat+.0001, lon+.0001], {
+        icon: icon_tracking,
+        // color: 'red',
+    }).addTo(map)
+    // do marker animations after it's been added to the map
+    marker_tracking.on('add', ()=>{
+        doAnimationsLiveMarker()
+        // put it in setInterval so it goes forever
+        setInterval(()=>{
+            doAnimationsLiveMarker()
+        }, 5000)
+    })
+    function doAnimationsLiveMarker() {
+        var trackingIcon = document.querySelector('.tracking-icon')
+        trackingIcon.style.backgroundColor = 'red'
+        setTimeout(()=>{
+            trackingIcon.style.width = '40px'
+            trackingIcon.style.height = '40px'
+            trackingIcon.style.marginLeft = '-20px'
+            trackingIcon.style.marginTop = '-20px'
+            }, 1000)
+
+        setTimeout(()=>{
+            trackingIcon.style.borderRadius = '10%'
+            trackingIcon.style.backgroundColor = 'red'
+            }, 2000)
+
+        setTimeout(()=>{
+            trackingIcon.style.width = '30px'
+            trackingIcon.style.height = '30px'
+            trackingIcon.style.borderRadius = '50%'
+            trackingIcon.style.marginLeft = '-15px'
+            trackingIcon.style.marginTop = '-15px'
+            }, 3000)    
+        }
+
+    function getLiveLocation() {     
+        // Standard Geolocation API call
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                updatePosition, // success callback
+                presentError // error callback
+            );
+        } else { 
+            document.getElementById("no-geo").hidden = false;
+        }
+    }
+    function updatePosition(position) {
+        // callback function to geolocation.getCurrentPosition
+        let cur_lat = position.coords.latitude.toFixed(5);
+        let cur_lon = position.coords.longitude.toFixed(5);
+        // update Leaflet map live location marker
+        let curLatLng = L.latLng(cur_lat, cur_lon)
+        console.log("Updating marker_tracking coordinates:")
+        console.log(curLatLng)
+        marker_tracking.setLatLng(curLatLng)
+            .addTo(map)
+    }
+    function presentError(e) {
+        var msg = `Geolocation Error #${e.code}: ${e.message}`;
+        alert(msg);
+    }
+
+    // delay function
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }
+    // continuously update live location
+    async function continuallyUpdateLocation() {
+        var i = 0
+        while (true) {
+            await delay(1000) //ms
+            console.log(i)
+            getLiveLocation()
+            i++
+        }
+    }
+    continuallyUpdateLocation()
+</script>
 {% endblock %}

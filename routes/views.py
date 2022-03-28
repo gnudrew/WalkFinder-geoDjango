@@ -1,9 +1,10 @@
 from django.conf import settings
-import os
+import os, json
 
 from django.shortcuts import render, redirect
 from .models import Mapgens
 from .buildmap import buildmap_base, buildmap_route
+from utils.transformations import ll_to_json
 
 from django.contrib.gis.geos import Point
 from random import random as r # interval r() -> x in [0,1)
@@ -297,15 +298,42 @@ def walk_view(request):
         return redirect('')
 
     # Build the map
-    m = buildmap_base(lat, lon)
-    m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route, plot_G=False)
+    # m = buildmap_base(lat, lon)
+    # m = buildmap_route(m, target_time, (lat, lon), (rand_lat, rand_lon), G=G, route=route, plot_G=False)
     
+    # create gdf of the route edges in order
+    node_pairs = zip(route[:-1], route[1:])
+    uvk = ((u, v, min(G[u][v], key=lambda k: G[u][v][k]["length"])) for u, v in node_pairs)
+    gdf_edges = ox.utils_graph.graph_to_gdfs(G.subgraph(route), nodes=False).loc[uvk]
+    print(gdf_edges)
+    print(gdf_edges.columns)
+    print(gdf_edges['geometry'].values[0])
+    # create list [lat,lon] from gdf['geometry'].values linestrings.. N.B. poly.geometry api: https://isbe.bwk.tue.nl/education/Python/04_02_Shapely.html#linestring-specific-attributes
+    linestrings = gdf_edges['geometry'].values
+    route_polyline_arr = []
+    for l in linestrings:
+        for point in zip(*reversed(l.xy)): # l.xy = (np.array, np.array)
+            route_polyline_arr.append(list(point)) # [lat, lon]
+    print(route_polyline_arr)
+    # # serialize list as json_dict
+    # json_route_polyline_arr = ll_to_json(route_polyline_arr)
+    # print(json_route_polyline_arr)
+    # print(type(json_route_polyline_arr))
+
+    # convert list of lists to json
+    # json_route_polyline_arr = json.dumps(route_polyline_arr)
+    # print(json_route_polyline_arr)
+    # print(type(json_route_polyline_arr))
+    # route_polyline_arr = [[lat, lon], [rand_lat, rand_lon]] # QUICK TEST
+
     return render(request, "walk.html", 
     {
-        'folium_map':m._repr_html_(), 
+        # 'folium_map':m._repr_html_(), 
         'lat':lat,
         'lon':lon,
         'rand_lat':rand_lat,
         'rand_lon':rand_lon,
+        'route_polyline_arr':route_polyline_arr,
+        # 'json_route_polyline_arr':json_route_polyline_arr, # list of [lat,lon] points
         'target_time':target_time,
     })

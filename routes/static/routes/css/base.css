@@ -53,31 +53,31 @@
 }
 
 /*
-#map {
+#map-section {
   padding-right: 15%;
 }
 
 @media screen and (max-width:1000px) {
-  #map {
+  #map-section {
     padding-right: 10%;
     padding-top: 0%;
   }
 }
 
 @media screen and (max-width:800px) {
-  #map {
+  #map-section {
     padding-right: 8%;
     padding-top: 0%;    }
 }
 
 @media screen and (max-width:700px) {
-  #map {
+  #map-section {
     padding-right: 5%;
     padding-top: 0%;    }
 }
 
 @media screen and (max-width:500px) {
-  #map {
+  #map-section {
     padding-right: 0%;
     padding-top: 0%;    }
 }

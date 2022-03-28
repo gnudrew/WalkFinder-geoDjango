@@ -14,7 +14,10 @@
     <script src="https://kit.fontawesome.com/0b88c99c07.js" crossorigin="anonymous"></script>
     <!-- Favicon Generator: https://formito.com/tools/favicon -->
     <link rel="icon" type="image/svg+xml" href="{% static 'root/favicon.svg' %}" />
-    
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>    
+
 </head>
 <body>
     <div class="is-flex is-flex-direction-column" style="height:100vh;">
@@ -205,7 +208,7 @@
         {% block loading %}{% endblock %}
 
         
-        <div class="box mt-0 mb-1 p-1 is-flex-grow-1 is-clipped" id="map">
+        <div class="box mt-0 mb-1 p-1 is-flex-grow-1 is-clipped" id="map-section">
                 {% block map %}{% endblock %}
         </div>
         
@@ -213,3 +216,8 @@
     </div>
 </body>
 </html>
+
+<!-- GLOBAL functions -->
+<script>
+    
+</script>
