@@ -134,19 +134,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = os.environ.get('SECRET_KEY','abs0fd980w98utas98dfu09a8yser0c123')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '*'
 ]
 
 # ~~~~~~~~~ DEVELOPMENT SPECIFIC CONFIG ~~~~~~~~~~
-OSGEO4W = r"C:\OSGeo4W"
-os.environ['OSGEO4W_ROOT'] = OSGEO4W
-os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
-os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
-os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
-GDAL_LIBRARY_PATH = OSGEO4W + r"\bin\gdal304.dll"
+# OSGEO4W = r"C:\OSGeo4W"
+# os.environ['OSGEO4W_ROOT'] = OSGEO4W
+# os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
+# os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+# os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+# GDAL_LIBRARY_PATH = OSGEO4W + r"\bin\gdal304.dll"
 
 ## OR
 
