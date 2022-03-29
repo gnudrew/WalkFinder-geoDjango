@@ -169,13 +169,23 @@
 {% endblock %}
 
 {% block map %}
-    <!-- <p> SERVER:<br>
-        The previous input had a target time of {{target_time}} minutes.<br>
-        The resulting network (below) has {{number_of_nodes}} nodes.<br>
-        The turnaround point candidate is at ({{rand_lat}}, {{rand_lon}}) degrees.
-    </p> -->
     {% if routegen_exception == '' %}
-        {{folium_map|safe}}
+    <!-- map container -->
+    <div id="map" style="height:100%; width:100%;"></div> 
+    <!-- make the map -->
+    <script src="{% static 'routes/js/map_builder.js' %}"></script> <!-- load helper functions to build the leaflet map -->
+    <script>
+        // set vars from jinja2
+        var lat = {{lat}}
+        var lon = {{lon}}
+
+        // make the map
+        var map = buildmap_route(
+            [lat_start, lon_start],
+            [lat_backtrack, lon_backtrack],
+            route,
+        )
+    </script>
     {% else %}
         {{routegen_exception}}
     {% endif %}

@@ -68,7 +68,7 @@ Target Time is {{target_time}} minutes.
     console.log(route_polyline_arr)
 
     // initialize map location and zoom
-    var map = L.map('map').setView([lat, lon], 14);
+    var map = L.map('map').setView([lat, lon], 16);
     // Mapbox tiles access token (public): pk.eyJ1IjoiZ251ZHJldyIsImEiOiJjbDFhNTNpbmU1NzJhM29ycHR0cnpmd25sIn0.-rOcgOmj2C3ZimMeiHcBEQ
     // add map tiles
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', 
@@ -93,7 +93,9 @@ Target Time is {{target_time}} minutes.
     // add animated icon for live location tracking marker
     var icon_tracking = L.divIcon({
         iconSize: [20,20],
-        shadowSize: [0,0],
+        // shadowSize: [0,0],
+        // html: 'hi'
+        html: '<i class="fa-solid fa-person-walking"></i>',
         // color: 'red',
         // className: 'animated-icon tracking-icon',
     })

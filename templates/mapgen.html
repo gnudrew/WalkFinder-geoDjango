@@ -1,7 +1,7 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block message %}
-{% endblock %}
+{% block message %}{% endblock %}
 
 {% block scriptSetLatLon %}
 <script>
@@ -12,6 +12,17 @@
 {% endblock %}
 
 {% block map %}
-    <!-- <p> SERVER: The previous input had latitude {{lat}}° and longitude {{lon}}°.</p> -->
-    {{folium_map|safe}}
+<!-- map container -->
+<div id="map" style="height:100%; width:100%;"></div> 
+<!-- script to build the map -->
+<script src="{% static 'routes/js/map_builder.js' %}"></script> <!-- load helper functions to build the leaflet map -->
+<script>
+    // set vars from jinja2
+    var lat = {{lat}}
+    var lon = {{lon}}
+
+    // make the map
+    buildmap_base(lat, lon)
+</script>
+
 {% endblock %}
