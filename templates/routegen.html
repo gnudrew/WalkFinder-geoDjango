@@ -79,7 +79,8 @@
     </form> 
 
     <div> <!-- stats from route generator -->
-        <div>there & back: {{route_distance}} mi | {{route_speed}} mph | {{route_time}} min</div>
+        <div id="imperial_units">there & back: {{route_distance}} mi | {{route_speed}} mph | {{route_time}} min ... {{route_distance_metric}} km | {{route_speed_metric}} kph </div>
+        <!-- <div id="metric_units">there & back: {{route_distance_metric}} km | {{route_speed_metric}} km/h | {{route_time}} min</div> -->
         <!-- <div>speed: {{route_speed}} mph</div>
         <div>time: {{route_time}} minutes (one way)</div> -->
     </div>
