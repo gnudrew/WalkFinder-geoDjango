@@ -10,5 +10,6 @@ from .base import *
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'calm-falls-98051.herokuapp.com'
+    'calm-falls-98051.herokuapp.com',
+    'lush-canary.herokuapp.com',
 ]
